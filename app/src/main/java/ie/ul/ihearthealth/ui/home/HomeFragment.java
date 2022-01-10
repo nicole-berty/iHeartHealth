@@ -12,6 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
+
 import ie.ul.ihearthealth.R;
 
 public class HomeFragment extends Fragment {
@@ -30,6 +38,7 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
         return root;
     }
 }

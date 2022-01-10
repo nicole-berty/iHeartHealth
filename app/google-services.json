@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "988178322312",
+    "project_id": "ihearthealth-f64c2",
+    "storage_bucket": "ihearthealth-f64c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988178322312:android:42bdae89d4d2b4b03ca03d",
+        "android_client_info": {
+          "package_name": "ie.ul.ihearthealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "988178322312-mvkjvoqhv03j7kkrp59211dmgf2sh5pl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJmYAxaHcSi_9Upe254IdbPFKJzkYo708"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "988178322312-mvkjvoqhv03j7kkrp59211dmgf2sh5pl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
