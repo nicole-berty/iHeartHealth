@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ie.ul.ihearthealth.HypertensionInfo;
 import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.databinding.FragmentLoginBinding;
 
@@ -56,6 +57,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.io.Console;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class LoginFragment extends Fragment {
@@ -76,7 +78,6 @@ public class LoginFragment extends Fragment {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
@@ -106,16 +107,24 @@ public class LoginFragment extends Fragment {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
+        final TextView infoButton = binding.infoButton;
         final Button loginButton = binding.login;
         final TextView registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
-        LoginButton fbLoginButton = binding.loginButton;
+        LoginButton fbLoginButton = binding.fbLoginButton;
         SignInButton googleLoginButton = binding.googleSignInButton;
+
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), HypertensionInfo.class);
+                startActivity(intent);
+            }
+        });
 
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("myTag", "BLAHHHHHHHHHHHHHHHH");
                 signIn();
             }
         });
@@ -191,7 +200,6 @@ public class LoginFragment extends Fragment {
                         passwordEditText.getText().toString());
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                System.out.println("EMAIL IS " + email + " password is " + password);
                 logIn(email, password);
             }
         });
@@ -199,7 +207,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 List<AuthUI.IdpConfig> providers = Arrays.asList(
-                        new AuthUI.IdpConfig.EmailBuilder().build()
+                        new AuthUI.IdpConfig.EmailBuilder().setRequireName(false).build()
                 );
 
                 startActivityForResult(
@@ -212,7 +220,7 @@ public class LoginFragment extends Fragment {
         });
 
         callbackManager = CallbackManager.Factory.create();
-        fbLoginButton.setPermissions("email");
+        fbLoginButton.setPermissions(Collections.singletonList("email"));
         fbLoginButton.setFragment(this);
 
         // Callback registration
@@ -237,12 +245,12 @@ public class LoginFragment extends Fragment {
 
     private void moveToHomeActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        Log.d("myTag2", "HELLLOOOOOOOOOOOOOOOOOOOO");
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -258,7 +266,6 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            System.out.println("USER IS " + user);
                            moveToHomeActivity();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -277,7 +284,6 @@ public class LoginFragment extends Fragment {
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-            Log.d("myTag3", "HELLLOOOOOOOOOOOOOOOO3");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         } else {
@@ -286,23 +292,19 @@ public class LoginFragment extends Fragment {
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        Log.d("myTag3.5", "GAHDHFHGFH");
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-            Log.d("myTag4", "GAHDHFHGFH");
             firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            Log.d("myTag4.5", "GAHDHFHGFH");
         }
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        Log.d("myTag5", "BOOP");
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -312,12 +314,10 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("myTag6", "BOOOPPP2");
                             moveToHomeActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Log.d("myTag7", "BOOOOOPP3");
                         }
                     }
                 });

@@ -13,6 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IHeartHealth">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HypertensionInfo"
+            android:exported="false"
+            android:theme="@style/Theme.IHeartHealth.NoActionBar" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -24,13 +31,15 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.IHeartHealth.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.IHeartHealth.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
             tools:replace="android:value" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
 
         <activity
             android:name="com.facebook.FacebookActivity"

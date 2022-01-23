@@ -20,9 +20,21 @@
             android:title="@string/menu_slideshow" />
     </group>
     <group
+        android:id="@+id/menu_middle"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_info"
+            android:title="Hypertension Information"/>
+        <!-- android:icon="@drawable/settings_cog" -->
+    </group>
+    <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single">
-
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/menu_settings"
+            />
+        <!-- android:icon="@drawable/settings_cog" -->
         <item
             android:id="@+id/logOut"
             android:title="Log Out"/>
