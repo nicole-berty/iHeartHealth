@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.google.gms:google-services:4.3.10'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -18,6 +18,13 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        maven { url 'https://jitpack.io' }
+        maven { url "https://chatsdk.jfrog.io/artifactory/release/chat-sdk-android" }
+        maven { url "https://chatsdk.jfrog.io/artifactory/release/chatkit" }
+        maven { url "https://chatsdk.jfrog.io/artifactory/release/matisse" }
+        maven { url "https://chatsdk.jfrog.io/artifactory/release/material-search-view" }
+        maven { url "https://chatsdk.jfrog.io/artifactory/release/android-image-cropper" }
     }
 }
 
