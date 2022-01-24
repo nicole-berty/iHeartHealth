@@ -26,6 +26,9 @@
             android:id="@+id/nav_info"
             android:title="Hypertension Information"/>
         <!-- android:icon="@drawable/settings_cog" -->
+        <item
+            android:id="@+id/nav_chat"
+            android:title="Chat with Others"/>
     </group>
     <group
         android:id="@+id/menu_bottom"

@@ -1,5 +1,6 @@
 package ie.ul.ihearthealth;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +28,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -40,6 +45,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import sdk.chat.core.session.ChatSDK;
+import sdk.chat.firebase.adapter.module.FirebaseModule;
+import sdk.chat.firebase.push.FirebasePushModule;
+import sdk.chat.firebase.ui.FirebaseUIModule;
+import sdk.chat.firebase.upload.FirebaseUploadModule;
+import sdk.chat.ui.module.UIModule;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try {
+            ChatSDK.ui().stop();
+        } catch (NullPointerException e) {
+
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -82,6 +100,42 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        try {
+            ChatSDK.builder()
+                    .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
+                    .build()
+
+                    // Add the Firebase network adapter module
+                    .addModule(
+                            FirebaseModule.builder()
+                                    .setFirebaseRootPath("pre_1")
+                                    .setFirebaseDatabaseURL("https://ihearthealth-f64c2-default-rtdb.europe-west1.firebasedatabase.app")
+                                    .setDevelopmentModeEnabled(true)
+                                    .build()
+                    )
+
+                    // Add the UI module
+                    .addModule(UIModule.builder()
+                            .setPublicRoomCreationEnabled(true)
+                            .setPublicRoomsEnabled(true)
+                            .build()
+                    )
+
+                    // Add modules to handle file uploads, push notifications
+                    .addModule(FirebaseUploadModule.shared())
+                    .addModule(FirebasePushModule.shared())
+
+                    // Enable Firebase UI with phone and email auth
+                    .addModule(FirebaseUIModule.builder()
+                            .setProviders(EmailAuthProvider.PROVIDER_ID, PhoneAuthProvider.PROVIDER_ID)
+                            .build()
+                    )
+                    // Activate
+                    .build()
+                    .activate(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         MenuItem infoItem = navigationView.getMenu().findItem(R.id.nav_info);
         infoItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -89,6 +143,17 @@ public class MainActivity extends AppCompatActivity {
                 //do your stuff
                 Intent intent = new Intent(getApplicationContext(), HypertensionInfo.class);
                 startActivity(intent);
+                return true;
+            }
+        });
+
+        MenuItem chatItem = navigationView.getMenu().findItem(R.id.nav_chat);
+        Context context = this;
+        chatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //do your stuff
+                ChatSDK.ui().startSplashScreenActivity(context);
                 return true;
             }
         });

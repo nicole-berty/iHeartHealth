@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "988178322312",
+    "firebase_url": "https://ihearthealth-f64c2-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "ihearthealth-f64c2",
     "storage_bucket": "ihearthealth-f64c2.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "988178322312-fsa33d37gchjamu87ti841emf5ktld6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ie.ul.ihearthealth",
+            "certificate_hash": "255b914337eab3f2c7c337a24c2ddf4831d559e5"
+          }
+        },
         {
           "client_id": "988178322312-mvkjvoqhv03j7kkrp59211dmgf2sh5pl.apps.googleusercontent.com",
           "client_type": 3
