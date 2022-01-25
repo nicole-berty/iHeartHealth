@@ -31,9 +31,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import ie.ul.ihearthealth.AlertDialogFragment;
 import ie.ul.ihearthealth.LoginActivity;
@@ -80,9 +83,12 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         Button btn_change_email = view.findViewById(R.id.btn_change_email);
         Button btn_change_pass = view.findViewById(R.id.btn_change_pass);
         Button btn_delete_account = view.findViewById(R.id.btn_delete_account);
+        Button btn_change_name = view.findViewById(R.id.btn_change_name);
+        EditText name = view.findViewById(R.id.name);
 
         user = mAuth.getCurrentUser();
         email.setText(user.getEmail());
+        if(user.getDisplayName() != null) name.setText(user.getDisplayName());
         String[] strProvider = {""};
 
         mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
@@ -161,6 +167,27 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
             public void onClick(View view) {
                 change = "pass";
                 showNoticeDialog();
+            }
+        });
+
+        btn_change_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(name.getText().toString())
+                        .build();
+
+                user.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User profile updated.");
+                                } else {
+                                    Toast.makeText(getContext(), "Please try again", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
 
@@ -267,6 +294,23 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    try
+                                                    {
+                                                        throw task.getException();
+                                                    }
+                                                    catch (FirebaseAuthInvalidCredentialsException malformedEmail)
+                                                    {
+                                                        Toast.makeText(getContext(), "Incorrect email format", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    catch (FirebaseAuthUserCollisionException existEmail)
+                                                    {
+                                                        Toast.makeText(getContext(), "That email is registered to another account", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        Log.d(TAG, "Email change exception: " + e.getMessage());
+                                                    }
                                                 }
                                             }
                                         });
