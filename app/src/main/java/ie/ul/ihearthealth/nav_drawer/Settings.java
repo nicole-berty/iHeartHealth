@@ -1,9 +1,6 @@
 package ie.ul.ihearthealth.nav_drawer;
 
 import static android.content.ContentValues.TAG;
-
-import android.app.ActionBar;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,15 +19,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-
-import java.nio.channels.AlreadyBoundException;
-import java.util.Objects;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import ie.ul.ihearthealth.AlertDialogFragment;
 import ie.ul.ihearthealth.LoginActivity;
@@ -42,6 +45,10 @@ import ie.ul.ihearthealth.R;
 public class Settings extends Fragment implements AlertDialogFragment.AlertDialogListener {
     FirebaseUser user;
     boolean usingProvider = false;
+    String change = "Email";
+    EditText email;
+    EditText pass;
+    AuthCredential credential;
 
     public Settings() {
         // Required empty public constructor
@@ -66,8 +73,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        EditText email = view.findViewById(R.id.email_address);
-        EditText pass = view.findViewById(R.id.password);
+        email = view.findViewById(R.id.email_address);
+        pass = view.findViewById(R.id.password);
         EditText repeatPass = view.findViewById(R.id.password2);
 
         Button btn_change_email = view.findViewById(R.id.btn_change_email);
@@ -76,19 +83,19 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
         user = mAuth.getCurrentUser();
         email.setText(user.getEmail());
-        Toast.makeText(getContext(), user.getDisplayName(), Toast.LENGTH_LONG).show();
-        final String[] strProvider = {""};
+        String[] strProvider = {""};
+
         mAuth.getAccessToken(false).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
             @Override
             public void onSuccess(GetTokenResult getTokenResult) {
                 strProvider[0] = getTokenResult.getSignInProvider();
+                if (strProvider[0].equals("google.com") || strProvider[0].equals("facebook.com")) {
+                    usingProvider = true;
+                    TextView providerMessage = view.findViewById(R.id.providerText);
+                    providerMessage.setText("You cannot edit your email or password as you used a provider such as Google or Facebook to sign in.");
+                }
             }
         });
-        if (strProvider[0].equals("google.com") || strProvider[0].equals("facebook.com")) {
-            usingProvider = true;
-            TextView providerMessage = view.findViewById(R.id.providerText);
-            providerMessage.setText("You cannot edit your email or password as you used a provider such as Google or Facebook to sign in.");
-        }
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -146,32 +153,14 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         btn_change_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = new AlertDialogFragment();
-                newFragment.show(getActivity().getSupportFragmentManager(), "reauthenticate");
-            //   if(newFragment)
-                user.updateEmail(email.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User email address updated.");
-                                }
-                            }
-                        });
+                showNoticeDialog();
             }
         });
         btn_change_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user.updatePassword(pass.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User password updated.");
-                                }
-                            }
-                        });
+                change = "pass";
+                showNoticeDialog();
             }
         });
 
@@ -179,7 +168,34 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
             @Override
             public void onClick(View view) {
                 //confirmation dialog
-                deleteAccount();
+                change = "delete";
+                if(usingProvider) {
+                    if (strProvider[0].equals("google.com")) {
+                        GoogleSignInClient mGoogleSignInClient;
+                        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken("988178322312-trph9390fjscnqq41i9a9vafn66kqsad.apps.googleusercontent.com")
+                                .requestEmail()
+                                .build();
+
+                        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                        mGoogleSignInClient.silentSignIn()
+                                .addOnCompleteListener(getActivity(),
+                                        new OnCompleteListener<GoogleSignInAccount>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                                                GoogleSignInAccount acct = task.getResult();
+                                                // Get credential and reauthenticate that Google Account
+                                                credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                                                reauthenticateAndTakeAction(credential);
+                                            } // End onComplete
+                                        });
+                    } else if (strProvider[0].equals("facebook.com")) {
+                        credential = FacebookAuthProvider.getCredential(AccessToken.getCurrentAccessToken().toString());
+                        reauthenticateAndTakeAction(credential);
+                    }
+                } else {
+                    showNoticeDialog();
+                }
             }
         });
     }
@@ -202,23 +218,63 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
     public void showNoticeDialog() {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new AlertDialogFragment();
-        dialog.show(getActivity().getSupportFragmentManager(), "NoticeDialogFragment");
+        ((AlertDialogFragment) dialog).setListener(this);
+        dialog.show(getChildFragmentManager(), "NoticeDialogFragment");
     }
 
-    // The dialog fragment receives a reference to this Activity through the
-    // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the NoticeDialogFragment.NoticeDialogListener interface
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        // User touched the dialog's positive button
-        Dialog dialogView = dialog.getDialog();
-        EditText email = (EditText) dialogView.findViewById(R.id.username);
-        Toast.makeText(getContext(), email.toString(), Toast.LENGTH_LONG).show();
+        EditText reauth_email = (EditText) dialog.getDialog().findViewById(R.id.username);
+        EditText reauth_password = (EditText) dialog.getDialog().findViewById(R.id.password);
+
+        if(reauth_email.getText().toString().length() < 1 || reauth_password.getText().toString().length() < 1) {
+            Toast.makeText(getContext(), "Please fill in both fields", Toast.LENGTH_LONG).show();
+        } else {
+            credential = EmailAuthProvider
+                        .getCredential(reauth_email.getText().toString(), reauth_password.getText().toString());
+            reauthenticateAndTakeAction(credential);
+        }
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
-        // User touched the dialog's negative button
 
+    }
+
+    void reauthenticateAndTakeAction(AuthCredential credential) {
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("TAG", "User re-authenticated.");
+                        if(task.isSuccessful()){
+                            if(change.equals("pass")) {
+                                user.updatePassword(pass.getText().toString())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                            } else if(change.equals("delete")) {
+                                deleteAccount();
+                            } else {
+                                user.updateEmail(email.getText().toString())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Re-authentication failed, please try again", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }
