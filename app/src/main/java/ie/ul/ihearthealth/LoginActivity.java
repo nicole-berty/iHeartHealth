@@ -1,13 +1,8 @@
 package ie.ul.ihearthealth;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import ie.ul.ihearthealth.ui.login.LoginFragment;
 
 public class LoginActivity extends AppCompatActivity {

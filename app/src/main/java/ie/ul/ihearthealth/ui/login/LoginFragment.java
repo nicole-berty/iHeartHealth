@@ -30,14 +30,10 @@ import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.databinding.FragmentLoginBinding;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.ui.home.HomeFragment;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -54,8 +50,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.io.Console;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
