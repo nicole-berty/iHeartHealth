@@ -48,8 +48,43 @@ public class MainActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         try {
             ChatSDK.ui().stop();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
+            try {
+                ChatSDK.builder()
+                        .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
+                        .build()
 
+                        // Add the Firebase network adapter module
+                        .addModule(
+                                FirebaseModule.builder()
+                                        .setFirebaseRootPath("pre_1")
+                                        .setFirebaseDatabaseURL("https://ihearthealth-f64c2-default-rtdb.europe-west1.firebasedatabase.app")
+                                        .setDevelopmentModeEnabled(true)
+                                        .build()
+                        )
+
+                        // Add the UI module
+                        .addModule(UIModule.builder()
+                                .setPublicRoomCreationEnabled(true)
+                                .setPublicRoomsEnabled(true)
+                                .build()
+                        )
+
+                        // Add modules to handle file uploads, push notifications
+                        .addModule(FirebaseUploadModule.shared())
+                        .addModule(FirebasePushModule.shared())
+
+                        // Enable Firebase UI with phone and email auth
+                        .addModule(FirebaseUIModule.builder()
+                                .setProviders(EmailAuthProvider.PROVIDER_ID, PhoneAuthProvider.PROVIDER_ID)
+                                .build()
+                        )
+                        // Activate
+                        .build()
+                        .activate(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -84,42 +119,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        try {
-            ChatSDK.builder()
-                    .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
-                    .build()
-
-                    // Add the Firebase network adapter module
-                    .addModule(
-                            FirebaseModule.builder()
-                                    .setFirebaseRootPath("pre_1")
-                                    .setFirebaseDatabaseURL("https://ihearthealth-f64c2-default-rtdb.europe-west1.firebasedatabase.app")
-                                    .setDevelopmentModeEnabled(true)
-                                    .build()
-                    )
-
-                    // Add the UI module
-                    .addModule(UIModule.builder()
-                            .setPublicRoomCreationEnabled(true)
-                            .setPublicRoomsEnabled(true)
-                            .build()
-                    )
-
-                    // Add modules to handle file uploads, push notifications
-                    .addModule(FirebaseUploadModule.shared())
-                    .addModule(FirebasePushModule.shared())
-
-                    // Enable Firebase UI with phone and email auth
-                    .addModule(FirebaseUIModule.builder()
-                            .setProviders(EmailAuthProvider.PROVIDER_ID, PhoneAuthProvider.PROVIDER_ID)
-                            .build()
-                    )
-                    // Activate
-                    .build()
-                    .activate(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         MenuItem infoItem = navigationView.getMenu().findItem(R.id.nav_info);
         infoItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -137,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 //do your stuff
-                ChatSDK.ui().startSplashScreenActivity(context);
+                UIModule.config().setAllowBackPressFromMainActivity(true);
+                ChatSDK.ui().startMainActivity(context);
                 return true;
             }
         });
@@ -179,7 +179,11 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().logOut();
         // Log out of Google
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        try {
+            ChatSDK.ui().stop();
+        } catch (NullPointerException ignored) {
 
+        }
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

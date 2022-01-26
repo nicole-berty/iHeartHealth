@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IHeartHealth">
         <activity
-            android:name=".ChatActivity"
-            android:exported="false" />
-        <activity
             android:name=".HypertensionInfo"
             android:exported="false"
             android:theme="@style/Theme.IHeartHealth.NoActionBar" />
