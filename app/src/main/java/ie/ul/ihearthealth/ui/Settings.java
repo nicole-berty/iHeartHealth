@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.nav_drawer;
+package ie.ul.ihearthealth.ui;
 
 import static android.content.ContentValues.TAG;
 import android.content.Intent;

@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/nav_settings"
-        android:name="ie.ul.ihearthealth.nav_drawer.Settings"
+        android:name="ie.ul.ihearthealth.ui.Settings"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

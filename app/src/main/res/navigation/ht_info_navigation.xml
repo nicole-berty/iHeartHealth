@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ht_info_navigation"
+    app:startDestination="@id/ht_definition">
+
+    <fragment
+        android:id="@+id/ht_definition"
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.HTDefinition"
+        android:label="fragment_ht_definition"
+        tools:layout="@layout/fragment_ht_definition" />
+    <fragment
+        android:id="@+id/htRisks"
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.HtRisks"
+        android:label="fragment_ht_risks"
+        tools:layout="@layout/fragment_ht_risks" />
+</navigation>

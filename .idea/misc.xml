@@ -10,17 +10,21 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_hypertension_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/app_bar_hypertension_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/app_bar_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/content_hypertension_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/content_main.xml" value="0.13072916666666667" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/dialog_signin.xml" value="0.1" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_gallery.xml" value="0.2109375" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_ht_definition.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_ht_risks.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_hypertension_info.xml" value="0.13125" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_register.xml" value="0.1" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_settings.xml" value="0.264" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_slideshow.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/nav_header_info.xml" value="0.4" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/nav_header_info.xml" value="0.2" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/nav_header_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/menu/activity_info_drawer.xml" value="0.1" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/menu/activity_main_drawer.xml" value="0.264" />
