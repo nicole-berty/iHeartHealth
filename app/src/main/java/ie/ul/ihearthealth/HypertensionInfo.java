@@ -34,13 +34,11 @@ public class HypertensionInfo extends AppCompatActivity {
         setContentView(R.layout.activity_hypertension_info);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Hypertension Information");
-        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.ht_definition, R.id.htRisks, R.id.nav_slideshow)
+                R.id.ht_definition, R.id.htRisks, R.id.bpMeasurement, R.id.healthcareComms)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

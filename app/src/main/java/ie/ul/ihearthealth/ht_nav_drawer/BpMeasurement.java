@@ -12,10 +12,10 @@ import ie.ul.ihearthealth.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HtRisks#newInstance} factory method to
+ * Use the {@link BpMeasurement#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HtRisks extends Fragment {
+public class BpMeasurement extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class HtRisks extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HtRisks() {
+    public BpMeasurement() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class HtRisks extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HtRisks.
+     * @return A new instance of fragment BpMeasurement.
      */
     // TODO: Rename and change types and number of parameters
-    public static HtRisks newInstance(String param1, String param2) {
-        HtRisks fragment = new HtRisks();
+    public static BpMeasurement newInstance(String param1, String param2) {
+        BpMeasurement fragment = new BpMeasurement();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class HtRisks extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ht_risks, container, false);
+        return inflater.inflate(R.layout.fragment_bp_measurement, container, false);
     }
 }

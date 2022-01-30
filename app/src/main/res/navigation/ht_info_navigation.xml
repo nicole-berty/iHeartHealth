@@ -7,12 +7,22 @@
 
     <fragment
         android:id="@+id/ht_definition"
-        android:name="ie.ul.ihearthealth.ht_nav_drawer.HTDefinition"
-        android:label="fragment_ht_definition"
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.HtDefinition"
+        android:label="What is Hypertension"
         tools:layout="@layout/fragment_ht_definition" />
     <fragment
         android:id="@+id/htRisks"
-        android:name="ie.ul.ihearthealth.ht_nav_drawer.HtRisks"
-        android:label="fragment_ht_risks"
-        tools:layout="@layout/fragment_ht_risks" />
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.HtResources"
+        android:label="Available Resources"
+        tools:layout="@layout/fragment_ht_resources" />
+    <fragment
+        android:id="@+id/bpMeasurement"
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.BpMeasurement"
+        android:label="Measuring Blood Pressure"
+        tools:layout="@layout/fragment_bp_measurement" />
+    <fragment
+        android:id="@+id/healthcareComms"
+        android:name="ie.ul.ihearthealth.ht_nav_drawer.HealthcareComms"
+        android:label="Medical Communication"
+        tools:layout="@layout/fragment_healthcare_comms" />
 </navigation>

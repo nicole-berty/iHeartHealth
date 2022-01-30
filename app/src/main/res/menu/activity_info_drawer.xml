@@ -8,15 +8,19 @@
         <item
             android:id="@+id/ht_definition"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:title="Learn about Hypertension"/>
         <item
             android:id="@+id/htRisks"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:title="Available Resources" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/bpMeasurement"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="Measuring Blood Pressure" />
+        <item
+            android:id="@+id/healthcareComms"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Healthcare Communication" />
     </group>
 
 </menu>
