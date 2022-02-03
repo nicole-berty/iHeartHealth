@@ -63,4 +63,6 @@ dependencies {
     implementation "sdk.chat:firebase-app:5.4.2"
 
     implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation("com.google.android.gms:play-services-fitness:21.0.1")
+    implementation("com.google.android.gms:play-services-auth:20.0.1")
 }
