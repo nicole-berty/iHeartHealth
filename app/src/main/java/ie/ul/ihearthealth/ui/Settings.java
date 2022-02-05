@@ -1,10 +1,17 @@
 package ie.ul.ihearthealth.ui;
 
 import static android.content.ContentValues.TAG;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -15,7 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +66,6 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +93,31 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         Button btn_delete_account = view.findViewById(R.id.btn_delete_account);
         Button btn_change_name = view.findViewById(R.id.btn_change_name);
         EditText name = view.findViewById(R.id.name);
+        Switch darkModeSwitch = view.findViewById(R.id.switch1);
+        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                darkModeSwitch.setChecked(true);
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                darkModeSwitch.setChecked(false);
+                break;
+        }
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
+                    editor.putInt("nightMode", 1);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
+                    editor.putInt("nightMode", 0);
+                }
+                editor.apply();
+            }
+        });
 
         user = mAuth.getCurrentUser();
         email.setText(user.getEmail());
@@ -251,8 +284,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        EditText reauth_email = (EditText) dialog.getDialog().findViewById(R.id.username);
-        EditText reauth_password = (EditText) dialog.getDialog().findViewById(R.id.password);
+        EditText reauth_email = dialog.getDialog().findViewById(R.id.username);
+        EditText reauth_password = dialog.getDialog().findViewById(R.id.password);
 
         if(reauth_email.getText().toString().length() < 1 || reauth_password.getText().toString().length() < 1) {
             Toast.makeText(getContext(), "Please fill in both fields", Toast.LENGTH_LONG).show();
