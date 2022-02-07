@@ -40,4 +40,24 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="menu_settings">Settings</string>
+
+    <string-array name="measurements_array">
+        <item>Sodium</item>
+        <item>Calories</item>
+        <item>Exercise</item>
+        <item>Blood Pressure</item>
+        <item>Alcohol Intake</item>
+        <item>Tobacco Intake</item>
+    </string-array>
+
+    <string-array name="bp_units">
+        <item>mmHg</item>
+    </string-array>
+    <string-array name="sodium_units">
+        <item>grams</item>
+        <item>milligrams</item>
+    </string-array>
+    <string-array name="calorie_units">
+        <item>kcal</item>
+    </string-array>
 </resources>

@@ -75,6 +75,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        container.removeAllViews();
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
