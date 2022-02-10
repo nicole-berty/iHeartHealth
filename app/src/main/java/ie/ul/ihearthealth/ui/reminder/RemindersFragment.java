@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.slideshow;
+package ie.ul.ihearthealth.ui.reminder;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import ie.ul.ihearthealth.R;
 
-public class SlideshowFragment extends Fragment {
+public class RemindersFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private RemindersViewModel remindersViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        remindersViewModel =
+                new ViewModelProvider(this).get(RemindersViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_reminder, container, false);
+        final TextView textView = root.findViewById(R.id.text_reminder);
+        remindersViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
