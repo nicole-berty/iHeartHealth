@@ -6,18 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.track_monitor.TrackFragment">
 
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:enabled="false"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.535"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
     <Spinner
         android:id="@+id/spinner2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="7dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/measurement"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_gallery"
-        app:layout_constraintTop_toTopOf="@+id/text_gallery" />
+        app:layout_constraintStart_toEndOf="@+id/measurement"
+        app:layout_constraintTop_toTopOf="@+id/measurement" />
 
     <EditText
-        android:id="@+id/text_gallery"
+        android:id="@+id/measurement"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
@@ -28,7 +40,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinner"
         app:layout_constraintEnd_toStartOf="@+id/spinner2"
         app:layout_constraintStart_toEndOf="@+id/spinner"
-        app:layout_constraintTop_toTopOf="@+id/spinner" />
+        app:layout_constraintTop_toTopOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -37,13 +50,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="284dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/text_gallery"
+        app:layout_constraintEnd_toStartOf="@+id/measurement"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -51,15 +63,15 @@
 
         <RadioButton
             android:id="@+id/nav_track_button"
-            android:text="Add Measurements"
-            style="@style/AppTheme.RadioButtonLikeBottomNavigationView">
-        </RadioButton>
+            style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
+            android:text="Add Measurements"></RadioButton>
+
         <RadioButton
             android:id="@+id/nav_monitor_button"
+            style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
             android:checked="true"
-            android:text="Monitor"
-            style="@style/AppTheme.RadioButtonLikeBottomNavigationView">
-        </RadioButton>
+            android:text="Monitor"></RadioButton>
 
     </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
