@@ -48,7 +48,7 @@
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="284dp"
+        android:layout_marginTop="112dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toStartOf="@+id/measurement"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,5 +73,15 @@
             android:text="Monitor"></RadioButton>
 
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/infoTv"
+        android:layout_width="342dp"
+        android:layout_height="294dp"
+        android:layout_marginTop="66dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

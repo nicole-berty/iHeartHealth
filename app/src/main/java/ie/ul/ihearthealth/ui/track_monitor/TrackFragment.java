@@ -3,6 +3,7 @@ package ie.ul.ihearthealth.ui.track_monitor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -88,18 +90,36 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         // Apply the adapter to the spinner
         measurementSpinner.setAdapter(adapter);
 
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> sodiumAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.sodium_units, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(getContext(),
+        sodiumAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> caloriesAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.calorie_units, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<CharSequence> adapter4= ArrayAdapter.createFromResource(getContext(),
+        caloriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> bpAdapter= ArrayAdapter.createFromResource(getContext(),
                 R.array.bp_units, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        bpAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<CharSequence> alcoholAdapter= ArrayAdapter.createFromResource(getContext(),
+                R.array.alcohol_units, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        alcoholAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<CharSequence> tobaccoAdapter= ArrayAdapter.createFromResource(getContext(),
+                R.array.tobacco_units, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        tobaccoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<CharSequence> exerciseAdapter= ArrayAdapter.createFromResource(getContext(),
+                R.array.exercise_units, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        exerciseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        TextView infoTv = view.findViewById(R.id.infoTv);
+        infoTv.setMovementMethod(LinkMovementMethod.getInstance());
 
         measurementSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -107,13 +127,23 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                 String spinnerValue = measurementSpinner.getSelectedItem().toString();
                 switch (spinnerValue) {
                     case "Sodium":
-                        unitSpinner.setAdapter(adapter2);
+                        unitSpinner.setAdapter(sodiumAdapter);
+                        infoTv.setText(R.string.sodium_info);
                         break;
                     case "Calories":
-                        unitSpinner.setAdapter(adapter3);
+                        unitSpinner.setAdapter(caloriesAdapter);
                         break;
                     case "Blood Pressure":
-                        unitSpinner.setAdapter(adapter4);
+                        unitSpinner.setAdapter(bpAdapter);
+                        break;
+                    case "Alcohol Intake":
+                        unitSpinner.setAdapter(alcoholAdapter);
+                        break;
+                    case "Tobacco Intake":
+                        unitSpinner.setAdapter(tobaccoAdapter);
+                        break;
+                    case "Exercise":
+                        unitSpinner.setAdapter(exerciseAdapter);
                         break;
                 }
             }
@@ -134,11 +164,7 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(measurement.getText().toString().length() > 0) {
-                    submit.setEnabled(true);
-                } else {
-                    submit.setEnabled(false);
-                }
+                submit.setEnabled(measurement.getText().toString().length() > 0);
             }
 
             @Override
