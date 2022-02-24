@@ -76,12 +76,15 @@
 
     <TextView
         android:id="@+id/infoTv"
-        android:layout_width="342dp"
-        android:layout_height="294dp"
+        android:layout_width="327dp"
+        android:layout_height="233dp"
         android:layout_marginTop="66dp"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit" />
+        app:layout_constraintTop_toBottomOf="@+id/submit"
+        app:layout_constraintVertical_bias="0.14" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
