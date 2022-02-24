@@ -30,8 +30,8 @@
 
     <EditText
         android:id="@+id/measurement"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="136dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="8dp"
         android:hint="Value"
         android:inputType="numberSigned"
@@ -64,13 +64,13 @@
         <RadioButton
             android:id="@+id/nav_track_button"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
-            android:text="Add Measurements"></RadioButton>
+            android:text="Add Measurements" />
 
         <RadioButton
             android:id="@+id/nav_monitor_button"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
             android:checked="true"
-            android:text="Monitor"></RadioButton>
+            android:text="Monitor" />
 
     </RadioGroup>
 
@@ -78,13 +78,27 @@
         android:id="@+id/infoTv"
         android:layout_width="327dp"
         android:layout_height="233dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginBottom="140dp"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit"
-        app:layout_constraintVertical_bias="0.14" />
+        app:layout_constraintTop_toBottomOf="@+id/submit" />
+
+    <EditText
+        android:id="@+id/systolicVal"
+        android:layout_width="135dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="140dp"
+        android:hint="Systolic Value"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/measurement"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.631" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

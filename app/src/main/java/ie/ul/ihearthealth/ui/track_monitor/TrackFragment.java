@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -80,6 +81,9 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
+        EditText measurement = view.findViewById(R.id.measurement);
+        EditText systolicVal = view.findViewById(R.id.systolicVal);
+
         Spinner measurementSpinner = (Spinner) view.findViewById(R.id.spinner);
         Spinner unitSpinner = (Spinner) view.findViewById(R.id.spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -125,6 +129,8 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String spinnerValue = measurementSpinner.getSelectedItem().toString();
+                systolicVal.setVisibility(View.INVISIBLE);
+                measurement.setHint("Value");
                 switch (spinnerValue) {
                     case "Sodium":
                         unitSpinner.setAdapter(sodiumAdapter);
@@ -132,18 +138,25 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                         break;
                     case "Calories":
                         unitSpinner.setAdapter(caloriesAdapter);
+                        infoTv.setText(R.string.calories_info);
                         break;
                     case "Blood Pressure":
                         unitSpinner.setAdapter(bpAdapter);
+                        systolicVal.setVisibility(View.VISIBLE);
+                        measurement.setHint("Dystolic Value");
+                        infoTv.setText(R.string.bp_info);
                         break;
                     case "Alcohol Intake":
                         unitSpinner.setAdapter(alcoholAdapter);
+                        infoTv.setText(R.string.alcohol_info);
                         break;
                     case "Tobacco Intake":
                         unitSpinner.setAdapter(tobaccoAdapter);
+                        infoTv.setText(R.string.tobacco_info);
                         break;
                     case "Exercise":
                         unitSpinner.setAdapter(exerciseAdapter);
+                        infoTv.setText(R.string.exercise_info);
                         break;
                 }
             }
@@ -155,7 +168,23 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
         Button submit = view.findViewById(R.id.submit);
 
-        EditText measurement = view.findViewById(R.id.measurement);
+        systolicVal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                submit.setEnabled(measurement.getText().toString().length() > 0 && systolicVal.getText().toString().length() > 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         measurement.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -164,7 +193,11 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                submit.setEnabled(measurement.getText().toString().length() > 0);
+                if(systolicVal.getVisibility() == View.VISIBLE) {
+                    submit.setEnabled(measurement.getText().toString().length() > 0 && systolicVal.getText().toString().length() > 0);
+                } else {
+                    submit.setEnabled(measurement.getText().toString().length() > 0);
+                }
             }
 
             @Override
@@ -177,13 +210,21 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                systolicVal.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                measurement.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 Date currentDateTime = Calendar.getInstance().getTime();
                 String[] splitCurrDateTime = currentDateTime.toString().split(" ");
                 String currentDate = splitCurrDateTime[splitCurrDateTime.length - 1] + "-" + splitCurrDateTime[1] + "-" + splitCurrDateTime[2];
                 String currentTime = splitCurrDateTime[3];
-                data.put(currentTime, measurement.getText().toString() + " " + unitSpinner.getSelectedItem().toString());
+                if(systolicVal.getVisibility() == View.VISIBLE) {
+                    data.put(currentTime, systolicVal.getText().toString() + "/" + measurement.getText().toString() + " " + unitSpinner.getSelectedItem().toString());
+                } else {
+                    data.put(currentTime, measurement.getText().toString() + " " + unitSpinner.getSelectedItem().toString());
+                }
                 String collection = measurementSpinner.getSelectedItem().toString();
                 writeToDatabase(collection, currentDate, data);
+                systolicVal.setText("");
+                measurement.setText("");
             }
         });
     }
@@ -195,12 +236,14 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d("TAG", "DocumentSnapshot successfully written!");
+                        Toast.makeText(getContext(), "Measurement added successfully!", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w("TAG", "Error writing document", e);
+                        Toast.makeText(getContext(), "Sorry, that didn't work. Please try inputting the measurement again.", Toast.LENGTH_LONG).show();
                     }
                 });
     }
