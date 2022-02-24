@@ -19,7 +19,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private ArrayList<MyModel> mStoreMyModelArrayList;
-
+    private int textSize;
 
     public MyAdapter(Activity activity, ArrayList<MyModel> storeMyModelArrayList) {
         this.mContext = activity;
@@ -41,6 +41,11 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (item != null) {
             setupValuesInWidgets(myViewHolder, item);
         }
+    }
+
+    public void setTextSizes(int textSize) {
+        this.textSize = textSize;
+        notifyDataSetChanged();
     }
 
 
