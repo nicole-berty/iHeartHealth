@@ -47,7 +47,6 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import ie.ul.ihearthealth.AlertDialogFragment;
 import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.R;
 
