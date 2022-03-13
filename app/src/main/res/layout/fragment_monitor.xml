@@ -10,33 +10,108 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="-112dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:scrollbars="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-            <Spinner
-                android:id="@+id/spinner2"
-                android:layout_width="0dp"
-                android:layout_height="62dp"
-                android:layout_marginStart="26dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="26dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/detailsText"
-                android:layout_width="299dp"
-                android:layout_height="454dp"
-                android:layout_marginTop="36dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner2" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <Spinner
+                    android:id="@+id/spinner2"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="26dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/monthSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="26dp"
+                    app:layout_constraintBottom_toTopOf="@+id/chart1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+                <Spinner
+                    android:id="@+id/yearSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="62dp"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="26dp"
+                    app:layout_constraintBottom_toTopOf="@+id/chart1"
+                    app:layout_constraintStart_toEndOf="@+id/monthSpinner"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner2"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/detailsText"
+                    android:layout_width="299dp"
+                    android:layout_height="454dp"
+                    android:layout_marginTop="56dp"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/yearSpinner" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart1"
+                    android:layout_width="405dp"
+                    android:layout_height="573dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="29dp"
+                    android:layout_marginBottom="84dp"
+                    app:layout_constraintBottom_toTopOf="@+id/averageMonthVal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner2"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="106dp"
+                    android:layout_height="33dp"
+                    android:layout_marginTop="7dp"
+                    android:text="Day of Month"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chart1" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="106dp"
+                    android:layout_height="61dp"
+                    android:layout_marginTop="204dp"
+                    android:rotation="-90"
+                    android:text="Value"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+                <TextView
+                    android:id="@+id/averageMonthVal"
+                    android:layout_width="312dp"
+                    android:layout_height="344dp"
+                    android:layout_marginTop="68dp"
+                    android:layout_marginBottom="140dp"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.494"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chart1"
+                    app:layout_constraintVertical_bias="0.306" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
     </ScrollView>
 
     <RadioGroup
@@ -45,16 +120,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:id="@+id/radioGroup"
+        android:background="@color/ihh_pink"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <RadioButton
             android:id="@+id/nav_track_button"
             android:text="Add Measurements"
+            android:textColor="@color/white"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView">
         </RadioButton>
         <RadioButton
             android:id="@+id/nav_monitor_button"
             android:checked="true"
+            android:textColor="@color/white"
             android:text="Monitor"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView">
         </RadioButton>

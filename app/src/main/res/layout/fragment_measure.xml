@@ -59,15 +59,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/ihh_pink"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <RadioButton
             android:id="@+id/nav_track_button"
+            android:textColor="@color/white"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
             android:text="Add Measurements" />
 
         <RadioButton
             android:id="@+id/nav_monitor_button"
+            android:textColor="@color/white"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
             android:checked="true"
             android:text="Monitor" />
@@ -76,15 +79,17 @@
 
     <TextView
         android:id="@+id/infoTv"
-        android:layout_width="327dp"
-        android:layout_height="233dp"
+        android:layout_width="312dp"
+        android:layout_height="344dp"
         android:layout_marginTop="68dp"
         android:layout_marginBottom="140dp"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit" />
+        app:layout_constraintTop_toBottomOf="@+id/submit"
+        app:layout_constraintVertical_bias="0.306" />
 
     <EditText
         android:id="@+id/systolicVal"

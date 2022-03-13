@@ -1,5 +1,6 @@
 package ie.ul.ihearthealth.ui.track_monitor;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -32,9 +34,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import ie.ul.ihearthealth.R;
@@ -206,22 +211,32 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-        Map<String, String> data = new HashMap<>();
         submit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+                Map<String, String> data = new HashMap<>();
                 systolicVal.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 measurement.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 Date currentDateTime = Calendar.getInstance().getTime();
+
+                SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = format1.format(currentDateTime);
+
+                String collection = measurementSpinner.getSelectedItem().toString();
                 String[] splitCurrDateTime = currentDateTime.toString().split(" ");
-                String currentDate = splitCurrDateTime[splitCurrDateTime.length - 1] + "-" + splitCurrDateTime[1] + "-" + splitCurrDateTime[2];
+                String currentDate = formattedDate;
                 String currentTime = splitCurrDateTime[3];
                 if(systolicVal.getVisibility() == View.VISIBLE) {
-                    data.put(currentTime, systolicVal.getText().toString() + "/" + measurement.getText().toString() + " " + unitSpinner.getSelectedItem().toString());
+                    data.put(currentTime, systolicVal.getText().toString().replaceAll("\\s+","") + " " + unitSpinner.getSelectedItem().toString());
+                    writeToDatabase("Systolic Blood Pressure", currentDate, data);
+                    collection = "Diastolic Blood Pressure";
                 } else {
-                    data.put(currentTime, measurement.getText().toString() + " " + unitSpinner.getSelectedItem().toString());
+                    if(measurementSpinner.getSelectedItem().toString().equals("Exercise")) {
+                        collection = measurementSpinner.getSelectedItem().toString() + " - " + unitSpinner.getSelectedItem().toString();
+                    }
                 }
-                String collection = measurementSpinner.getSelectedItem().toString();
+                data.put(currentTime, measurement.getText().toString().replaceAll("\\s+","") + " " + unitSpinner.getSelectedItem().toString());
                 writeToDatabase(collection, currentDate, data);
                 systolicVal.setText("");
                 measurement.setText("");
