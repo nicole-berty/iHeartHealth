@@ -17,12 +17,8 @@ import ie.ul.ihearthealth.ui.track_monitor.TrackFragment;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         container.removeAllViews();
         return root;

@@ -46,14 +46,12 @@ import ie.ul.ihearthealth.R;
 
 public class TrackFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private TrackViewModel trackViewModel;
     private FirebaseFirestore db;
     private FirebaseUser user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        trackViewModel =
-                new ViewModelProvider(this).get(TrackViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_measure, container, false);
         container.removeAllViews();
         return root;
