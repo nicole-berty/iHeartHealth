@@ -1,6 +1,8 @@
 package ie.ul.ihearthealth.ui.reminder;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,30 +11,39 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import ie.ul.ihearthealth.R;
 
 public class ReminderFragment extends Fragment {
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private List<Medicine> medicines;
 
-    private RemindersViewModel remindersViewModel;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        remindersViewModel =
-                new ViewModelProvider(this).get(RemindersViewModel.class);
         View root = inflater.inflate(R.layout.fragment_reminder, container, false);
-        final TextView textView = root.findViewById(R.id.text_reminder);
-        remindersViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         container.removeAllViews();
         return root;
     }
@@ -40,14 +51,71 @@ public class ReminderFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getContext(), ReminderActivity.class);
+                startActivity(intent);
             }
         });
 
+        medicines = new ArrayList<Medicine>();
+        recyclerView = view.findViewById(R.id.recycler_view_medicine);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new RecyclerAdapter(new ArrayList<>(), getActivity());
+        recyclerView.setAdapter(adapter);
+        readFromDatabase();
+    }
+
+    public void loadMedicines(List<Medicine> data) {
+        medicines = data;
+        recyclerView.setAdapter(new RecyclerAdapter(medicines, getActivity()));
+        recyclerView.invalidate();
+    }
+
+    public List<Medicine> getMedicineList(String[] data) {
+        List<Medicine> medicineList = new ArrayList<>();
+
+        for(String s : data) {
+            String[] splitReminder = s.split("=");
+            String[] details = splitReminder[1].split(";");
+            details[0] = details[0].replace("Medicine Name: ", "");
+            Medicine medicine = new Medicine(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5]);
+            medicineList.add(medicine);
+        }
+
+        return medicineList;
+    }
+
+    private void readFromDatabase() {
+        DocumentReference docRef = db.collection("reminders").document(user.getEmail());
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w("TAG", "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d("TAG", "Current data: " + snapshot.getData());
+                    String allReminders = snapshot.getData().toString().replace("{", "");
+                    allReminders = allReminders.replace("}", "");
+                    String[] splitReminders = allReminders.split(",");
+                    List<Medicine> h = getMedicineList(splitReminders);
+                    loadMedicines(h);
+                } else {
+                    Log.d("TAG", "Current data: null");
+                }
+            }
+        });
     }
 }
