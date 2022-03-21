@@ -16,8 +16,6 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_measurements, R.id.nav_reminders, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -158,6 +156,22 @@ public class MainActivity extends AppCompatActivity {
                     123);
         } else {
             Toast.makeText(this, "Granted", Toast.LENGTH_LONG).show();
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
+                    123);
+        } else {
+            Toast.makeText(this, "Granted", Toast.LENGTH_LONG).show();
+        }
+
+        String menuFragment = getIntent().getStringExtra("menuFragment");
+        if (menuFragment != null) {
+            if (menuFragment.equals("reminder")) {
+                navController.navigate(R.id.nav_reminders);
+            }
         }
     }
 
