@@ -32,6 +32,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import java.util.concurrent.TimeUnit;
+
+import ie.ul.ihearthealth.ui.calendar.CalendarActivity;
 import sdk.chat.core.session.ChatSDK;
 import sdk.chat.firebase.adapter.module.FirebaseModule;
 import sdk.chat.firebase.push.FirebasePushModule;
@@ -115,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        MenuItem calendar = navigationView.getMenu().findItem(R.id.nav_calendar);
+        calendar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //do your stuff
+                Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         MenuItem infoItem = navigationView.getMenu().findItem(R.id.nav_info);
         infoItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
