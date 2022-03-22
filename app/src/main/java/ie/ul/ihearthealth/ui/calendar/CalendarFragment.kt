@@ -1,7 +1,6 @@
 package ie.ul.ihearthealth.ui.calendar
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings.System.getString
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -11,9 +10,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,10 +24,10 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import ie.ul.ihearthealth.MainActivity
 import ie.ul.ihearthealth.R
-import ie.ul.ihearthealth.databinding.Example3EventItemViewBinding
-import ie.ul.ihearthealth.databinding.Example3CalendarDayBinding
-import ie.ul.ihearthealth.databinding.Example3CalendarHeaderBinding
-import ie.ul.ihearthealth.databinding.Example3FragmentBinding
+import ie.ul.ihearthealth.databinding.CalendarDayBinding
+import ie.ul.ihearthealth.databinding.CalendarEventItemViewBinding
+import ie.ul.ihearthealth.databinding.CalendarFragmentBinding
+import ie.ul.ihearthealth.databinding.CalendarHeaderBinding
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -38,24 +35,24 @@ import java.util.*
 
 data class Event(val id: String, val text: String, val date: LocalDate)
 
-class Example3EventsAdapter(val onClick: (Event) -> Unit) :
-    RecyclerView.Adapter<Example3EventsAdapter.Example3EventsViewHolder>() {
+class CalendarEventsAdapter(val onClick: (Event) -> Unit) :
+    RecyclerView.Adapter<CalendarEventsAdapter.CalendarEventsViewHolder>() {
 
     val events = mutableListOf<Event>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Example3EventsViewHolder {
-        return Example3EventsViewHolder(
-            Example3EventItemViewBinding.inflate(parent.context.layoutInflater, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarEventsViewHolder {
+        return CalendarEventsViewHolder(
+            CalendarEventItemViewBinding.inflate(parent.context.layoutInflater, parent, false)
         )
     }
 
-    override fun onBindViewHolder(viewHolder: Example3EventsViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: CalendarEventsViewHolder, position: Int) {
         viewHolder.bind(events[position])
     }
 
     override fun getItemCount(): Int = events.size
 
-    inner class Example3EventsViewHolder(private val binding: Example3EventItemViewBinding) :
+    inner class CalendarEventsViewHolder(private val binding: CalendarEventItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -70,9 +67,9 @@ class Example3EventsAdapter(val onClick: (Event) -> Unit) :
     }
 }
 
-class Example3Fragment : BaseFragment(R.layout.example_3_fragment), HasBackButton {
+class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton {
 
-    private val eventsAdapter = Example3EventsAdapter {
+    private val eventsAdapter = CalendarEventsAdapter {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.example_3_dialog_delete_confirmation)
             .setPositiveButton(R.string.delete) { _, _ ->
@@ -124,12 +121,12 @@ class Example3Fragment : BaseFragment(R.layout.example_3_fragment), HasBackButto
     private val selectionFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
     private val events = mutableMapOf<LocalDate, List<Event>>()
 
-    private lateinit var binding: Example3FragmentBinding
+    private lateinit var binding: CalendarFragmentBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = Example3FragmentBinding.bind(view)
+        binding = CalendarFragmentBinding.bind(view)
 
         binding.exThreeRv.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -153,7 +150,7 @@ class Example3Fragment : BaseFragment(R.layout.example_3_fragment), HasBackButto
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             lateinit var day: CalendarDay // Will be set when this container is bound.
-            val binding = Example3CalendarDayBinding.bind(view)
+            val binding = CalendarDayBinding.bind(view)
 
             init {
                 view.setOnClickListener {
@@ -211,7 +208,7 @@ class Example3Fragment : BaseFragment(R.layout.example_3_fragment), HasBackButto
         }
 
         class MonthViewContainer(view: View) : ViewContainer(view) {
-            val legendLayout = Example3CalendarHeaderBinding.bind(view).legendLayout.root
+            val legendLayout = CalendarHeaderBinding.bind(view).legendLayout.root
         }
         binding.exThreeCalendar.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
             override fun create(view: View) = MonthViewContainer(view)
@@ -262,7 +259,7 @@ class Example3Fragment : BaseFragment(R.layout.example_3_fragment), HasBackButto
     private fun updateAdapterForDate(date: LocalDate) {
         eventsAdapter.apply {
             events.clear()
-            events.addAll(this@Example3Fragment.events[date].orEmpty())
+            events.addAll(this@CalendarFragment.events[date].orEmpty())
             notifyDataSetChanged()
         }
         binding.exThreeSelectedDateText.text = selectionFormatter.format(date)
