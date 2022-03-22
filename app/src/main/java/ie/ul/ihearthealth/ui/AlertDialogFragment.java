@@ -10,11 +10,6 @@ import android.view.LayoutInflater;
 
 import ie.ul.ihearthealth.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AlertDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AlertDialogFragment extends DialogFragment {
 
     AlertDialogListener listener;

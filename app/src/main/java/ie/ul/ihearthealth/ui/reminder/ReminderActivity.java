@@ -232,6 +232,7 @@ public class ReminderActivity extends AppCompatActivity {
                 public void onDateSet(DatePicker datePicker, int setYear, int setMonth, int setDay) {
                     String monthChoice;
                     String dayChoice;
+                    setMonth += 1;
                     if (setMonth < 10) {
                         monthChoice = "0" + setMonth;
                     } else {

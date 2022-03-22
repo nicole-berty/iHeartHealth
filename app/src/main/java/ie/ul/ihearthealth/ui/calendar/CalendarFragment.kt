@@ -1,21 +1,27 @@
 package ie.ul.ihearthealth.ui.calendar
+
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.inputmethod.InputMethodManager
-import android.widget.FrameLayout
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -33,7 +39,8 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-data class Event(val id: String, val text: String, val date: LocalDate)
+
+data class Event(val id: String, val appointmentName: String, val appointmentTime: String, val date: LocalDate)
 
 class CalendarEventsAdapter(val onClick: (Event) -> Unit) :
     RecyclerView.Adapter<CalendarEventsAdapter.CalendarEventsViewHolder>() {
@@ -62,53 +69,31 @@ class CalendarEventsAdapter(val onClick: (Event) -> Unit) :
         }
 
         fun bind(event: Event) {
-            binding.itemEventText.text = event.text
+            binding.itemEventText.text = event.appointmentName + "\nAppointment Time: " + event.appointmentTime
         }
     }
 }
 
-class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton {
+class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton, EventDialogFragment.EventDialogListener {
+    private val dialog: DialogFragment = EventDialogFragment()
+    private val db = FirebaseFirestore.getInstance()
+    val user = FirebaseAuth.getInstance().currentUser
 
     private val eventsAdapter = CalendarEventsAdapter {
         AlertDialog.Builder(requireContext())
-            .setMessage(R.string.calendar_dialog_delete_confirmation)
+            .setMessage(R.string.calendar_dialog_action_confirmation)
             .setPositiveButton(R.string.delete) { _, _ ->
                 deleteEvent(it)
             }
-            .setNegativeButton(R.string.close, null)
+            .setNegativeButton(R.string.modify) { _, _ ->
+                (dialog as EventDialogFragment).isNewEvent = false
+                dialog.eventId = it.id.replace(" ", "")
+                dialog.eventName = it.appointmentName
+                dialog.eventTime = it.appointmentTime
+                dialog.eventDate = it.date
+                dialog.show(childFragmentManager, "EventDialogFragment")
+            }
             .show()
-    }
-
-    private val inputDialog by lazy {
-        val editText = AppCompatEditText(requireContext())
-        val layout = FrameLayout(requireContext()).apply {
-            // Setting the padding on the EditText only pads the input area
-            // not the entire EditText so we wrap it in a FrameLayout.
-            val padding = dpToPx(20, requireContext())
-            setPadding(padding, padding, padding, padding)
-            addView(editText, FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
-        }
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.calendar_input_dialog_title))
-            .setView(layout)
-            .setPositiveButton(R.string.save) { _, _ ->
-                saveEvent(editText.text.toString())
-                // Prepare EditText for reuse.
-                editText.setText("")
-            }
-            .setNegativeButton(R.string.close, null)
-            .create()
-            .apply {
-                setOnShowListener {
-                    // Show the keyboard
-                    editText.requestFocus()
-                    context.inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-                }
-                setOnDismissListener {
-                    // Hide the keyboard
-                    context.inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
-                }
-            }
     }
 
     override val titleRes: Int = R.string.calendar_title
@@ -125,6 +110,13 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        readFromDatabase()
+        (dialog as EventDialogFragment).setListener(this)
+        dialog.eventId = ""
+        dialog.eventName = ""
+        dialog.eventTime = ""
+        dialog.eventDate = null
+        dialog.isNewEvent = true
 
         binding = CalendarFragmentBinding.bind(view)
 
@@ -174,12 +166,12 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                     when (day.date) {
                         today -> {
                             textView.setTextColorRes(R.color.white)
-                            textView.setBackgroundResource(R.drawable.example_3_today_bg)
+                            textView.setBackgroundResource(R.drawable.calendar_today_bg)
                             dotView.makeInVisible()
                         }
                         selectedDate -> {
                             textView.setTextColorRes(R.color.white)
-                            textView.setBackgroundResource(R.drawable.example_3_selected_bg)
+                            textView.setBackgroundResource(R.drawable.calendar_selected_bg)
                             dotView.makeInVisible()
                         }
                         else -> {
@@ -225,8 +217,23 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
 
         binding.exThreeAddButton.setOnClickListener {
-            inputDialog.show()
+            dialog.isNewEvent = true
+            dialog.eventDate = selectedDate
+            dialog.show(childFragmentManager, "EventDialogFragment")
         }
+    }
+
+    private fun loadEvent(id: String, name: String, time: String, date: LocalDate) {
+        for ((date1, eventList) in events) {
+            if(date1 == date) {
+                for(event in eventList) {
+                    if(event.id == id) {
+                        events[date] = events[date].orEmpty().minus(event)
+                    }
+                }
+            }
+        }
+        events[date] = events[date].orEmpty().plus(Event(id, name, time, date))
     }
 
     private fun selectDate(date: LocalDate) {
@@ -239,20 +246,18 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
     }
 
-    private fun saveEvent(text: String) {
-        if (text.isBlank()) {
-            Toast.makeText(requireContext(), R.string.calendar_empty_input_text, Toast.LENGTH_LONG).show()
-        } else {
-            selectedDate?.let {
-                events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), text, it))
-                updateAdapterForDate(it)
-            }
-        }
+    private fun saveEvent(name: String, time: String, date: LocalDate) : String {
+        var id = UUID.randomUUID().toString()
+        events[date] = events[date].orEmpty().plus(Event(id, name, time, date))
+        selectDate(date)
+        updateAdapterForDate(date)
+        return id
     }
 
     private fun deleteEvent(event: Event) {
         val date = event.date
         events[date] = events[date].orEmpty().minus(event)
+        deleteFromDatabase(event.id.replace(" ", ""))
         updateAdapterForDate(date)
     }
 
@@ -279,6 +284,108 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         activity?.finish()
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment?) {
+        val appointmentName = dialog!!.dialog!!.findViewById<EditText>(R.id.appointmentName)
+        val appointmentTime = dialog.dialog!!.findViewById<TextView>(R.id.preview_picked_time_textView)
+        val appointmentDate = dialog.dialog!!.findViewById<TextView>(R.id.appointment_date)
+
+        if (appointmentName.text.toString().isEmpty() || appointmentTime.text.toString().isEmpty()) {
+            Toast.makeText(context, "Please fill in the appointment name and time", Toast.LENGTH_LONG).show()
+        } else {
+            if((dialog as EventDialogFragment).isNewEvent) {
+                val id = saveEvent(appointmentName.text.toString(), appointmentTime.text.toString(), dialog.eventDate)
+                val data = mutableMapOf<String, String>()
+                val dataString = ("Appointment Name: " + appointmentName.text.toString() +
+                        ";Appointment Time: " + appointmentTime.text.toString() + ";Appointment Date: " + appointmentDate.text.toString())
+                data[id] = dataString
+                writeToDatabase(data)
+            } else {
+                val data = ("Appointment Name: " + appointmentName.text.toString() +
+                        ";Appointment Time: " + appointmentTime.text.toString() + ";Appointment Date: " + appointmentDate.text.toString())
+                updateDatabase(dialog.eventId, data)
+                events.clear()
+                readFromDatabase()
+                selectDate(dialog.eventDate)
+            }
+        }
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment?) {
+    }
+
+    private fun updateDatabase(id: String, data: String) {
+        val docRef = db.collection("calendar").document(user?.getEmail().toString())
+        docRef
+            .update(id, data)
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener { e -> Log.w("TAG", "Error updating document", e) }
+    }
+
+    private fun readFromDatabase() {
+        val docRef = db.collection("calendar").document(user?.getEmail().toString())
+
+        docRef.addSnapshotListener(EventListener { snapshot, e ->
+            if (e != null) {
+                Log.w("TAG", "Listen failed.", e)
+                return@EventListener
+            }
+            if (snapshot != null && snapshot.exists()) {
+                Log.d("TAG", "Current data: " + snapshot.data)
+                var allAppointments = snapshot.data.toString().replace("{", "")
+                allAppointments = allAppointments.replace("}", "")
+                val splitAppointments = allAppointments.split(",")
+                for (s in splitAppointments) {
+                    val splitAppointment = s.split("=")
+                    val details = splitAppointment[1].split(";").toTypedArray()
+                    details[0] = details[0].replace("Appointment Name: ", "")
+                    details[1] = details[1].replace("Appointment Time: ", "")
+                    details[2] = details[2].replace("Appointment Date: ", "")
+                    loadEvent(splitAppointment[0], details[0], details[1],LocalDate.parse(details[2]))
+                    updateAdapterForDate(LocalDate.parse(details[2]))
+                }
+            } else {
+                Log.d("TAG", "Current data: null")
+            }
+        })
+    }
+
+    private fun deleteFromDatabase(id: String) {
+        val docRef = db.collection("calendar").document(user?.getEmail().toString())
+
+        print("DELETE ID is" + id)
+        val updates: MutableMap<String, Any> = HashMap()
+        updates[id] = FieldValue.delete()
+
+        docRef.update(updates).addOnCompleteListener {
+            Toast.makeText(
+                context,
+                "Appointment deleted",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun writeToDatabase(data: Map<String, String>?) {
+        db.collection("calendar").document(user?.getEmail().toString())
+            .set(data!!, SetOptions.merge())
+            .addOnSuccessListener(OnSuccessListener<Void?> {
+                Log.d("TAG", "DocumentSnapshot successfully written!")
+                Toast.makeText(
+                    activity,
+                    "Appointment added successfully!",
+                    Toast.LENGTH_LONG
+                ).show()
+            })
+            .addOnFailureListener(OnFailureListener { e ->
+                Log.w("TAG", "Error writing document", e)
+                Toast.makeText(
+                    activity,
+                    "Sorry, that didn't work. Please try creating the appointment again.",
+                    Toast.LENGTH_LONG
+                ).show()
+            })
     }
 
 }
