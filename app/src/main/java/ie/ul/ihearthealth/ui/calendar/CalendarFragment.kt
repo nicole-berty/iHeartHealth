@@ -71,7 +71,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
 
     private val eventsAdapter = CalendarEventsAdapter {
         AlertDialog.Builder(requireContext())
-            .setMessage(R.string.example_3_dialog_delete_confirmation)
+            .setMessage(R.string.calendar_dialog_delete_confirmation)
             .setPositiveButton(R.string.delete) { _, _ ->
                 deleteEvent(it)
             }
@@ -89,7 +89,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
             addView(editText, FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
         }
         AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.example_3_input_dialog_title))
+            .setTitle(getString(R.string.calendar_input_dialog_title))
             .setView(layout)
             .setPositiveButton(R.string.save) { _, _ ->
                 saveEvent(editText.text.toString())
@@ -241,7 +241,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
 
     private fun saveEvent(text: String) {
         if (text.isBlank()) {
-            Toast.makeText(requireContext(), R.string.example_3_empty_input_text, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), R.string.calendar_empty_input_text, Toast.LENGTH_LONG).show()
         } else {
             selectedDate?.let {
                 events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), text, it))
