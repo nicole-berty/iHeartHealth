@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -36,23 +35,21 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.core.utilities.Tree;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.json.JSONObject;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -70,8 +67,9 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
     private LineChart chart;
     private TextView tv2;
     private TextView tv4;
-    private TextView averageMonthVal;
+    private TextView averageDayVal;
     private ArrayList<Integer> years;
+    private boolean highBp;
 
     public MonitorFragment() {
         // Required empty public constructor
@@ -95,10 +93,11 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        highBp = false;
 
         tv2 = view.findViewById(R.id.textView2);
         tv4 = view.findViewById(R.id.textView4);
-        averageMonthVal = view.findViewById(R.id.averageMonthVal);
+        averageDayVal = view.findViewById(R.id.averageMonthVal);
         RadioButton nav_monitor = view.findViewById(R.id.nav_monitor_button);
         RadioButton nav_track = view.findViewById(R.id.nav_track_button);
         nav_monitor.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +251,6 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         details += getUnits();
         return details;
     }
-
     @SuppressLint("NewApi")
     public void groupLineChart(View view, Map<LocalDate, String> graphData, Map<LocalDate, String> graphData2, int month, int year, int chartID){
         chart = view.findViewById(chartID);
@@ -280,6 +278,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         if(chartData.getDataSetCount() < 1) {
             chart.setVisibility(View.INVISIBLE);
             details.setText("You haven't logged any measurements for this month!");
+            averageDayVal.setText("");
             tv2.setText("");
             tv4.setText("");
         } else {
@@ -333,7 +332,9 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
     @RequiresApi(api = Build.VERSION_CODES.O)
     void getMapData(Map<LocalDate, String> graphData, int year, int month, LineData chartData, boolean isBPGraph, boolean isRed) {
         ArrayList<Integer> coloursUsed = new ArrayList<>();
-        double monthlyAverage = 0.0;
+        double dailyAverage = 0.0;
+        int numDays = 0;
+        int numMeasurements = 0;
         for (Map.Entry<LocalDate, String> set : graphData.entrySet()) {
             ArrayList<Entry> entries = new ArrayList<>();
             int day = set.getKey().getDayOfMonth();
@@ -341,12 +342,14 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
             int year2 = set.getKey().getYear();
             if(year2 == year) {
                 if (month2 == month) {
+                    numDays = numDays + 1;
                     String[] temp = set.getValue().split(",");
                     for (String s : temp) {
                         String[] tempData = s.split("=");
                         String[] data = tempData[1].split(" ");
                         entries.add(new Entry(day, Float.parseFloat(data[0].replace("}", ""))));
-                        monthlyAverage += Float.parseFloat(data[0].replace("}", ""));
+                        numMeasurements++;
+                        dailyAverage += Float.parseFloat(data[0].replace("}", ""));
                     }
                     LineDataSet set1 = new LineDataSet(entries, set.getKey().toString());
                     set1.setCircleRadius(5);
@@ -374,23 +377,103 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
                 }
             }
         }
-
-        Month month1 = Month.of(month);
-        switch(month1.length(Year.isLeap(year))) {
-           case 28:
-               monthlyAverage = monthlyAverage / 28.0;
-               break;
-           case 29:
-               monthlyAverage = monthlyAverage / 29.0;
-               break;
-           case 30:
-               monthlyAverage = monthlyAverage / 30.0;
-               break;
-            default:
-               monthlyAverage = monthlyAverage / 31.0;
-               break;
+        String days = "days";
+        if(numDays == 1) {
+            days = "day";
+        } else if(!isBPGraph) {
+            dailyAverage = dailyAverage / numDays;
         }
-        averageMonthVal.setText("Average for the month: " + String.format("%.2f", monthlyAverage) + " " + getUnits());
+        if(isBPGraph) {
+            System.out.println("Num measurements is " + numMeasurements + " sum is " + dailyAverage);
+            if(numDays > 1) {
+                dailyAverage = dailyAverage / numMeasurements;
+            }
+            if(isRed) {
+                averageDayVal.append("Average daily blood pressure: " + String.format("%.2f", dailyAverage) + "/");
+            } else {
+                averageDayVal.append(String.format("%.2f", dailyAverage) + getUnits() + " based on values logged from " + numMeasurements + " measurements.");
+            }
+
+        } else if(!isRed) {
+            averageDayVal.setText("Average daily intake: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
+        }
+        switch (dataSpinner.getSelectedItem().toString()) {
+            case "Sodium":
+                if(dailyAverage < 2500) {
+                    averageDayVal.append("\n\nYour sodium intake is ideal - it is below the maximum recommended amount of 2500 milligrams a day. Keep up the good work!");
+                } else {
+                    averageDayVal.append("\n\nYour sodium intake is above the maximum recommended amount of 2500 milligrams a day. Regularly exceeding this intake can contribute" +
+                            " to the development of high blood pressure and other cardiac problems. Try to reduce your sodium intake by avoiding adding table salt to meals," +
+                            " opting for low or no sodium items when eating, cutting back on processed and smoked foods, and using herbs and spices to add flavour to food.");
+                }
+                break;
+            case "Calories":
+                if(dailyAverage < 2500) {
+                    averageDayVal.append("\n\nYour caloric intake seems to be good - though it's important to remember that how many calories you need depends on your exercise levels, age, and sex." +
+                            " In general, your caloric intake should be equal to your energy expenditure. ");
+                } else {
+                    averageDayVal.append("\n\nYour caloric intake is above the maximum recommended amount of 2500 kcal a day.  - though it's important to remember that how many calories you need depends on your exercise levels, age, and sex.\n" +
+                            "\nYour caloric intake may be okay based on these factors - in general, your caloric intake should be equal to your energy expenditure." +
+                            " If you are trying to lose weight, your caloric intake should be less than your energy expenditure. Being overweight contributes to the development of high blood pressure so " +
+                            "it is important to maintain a healthy weight.");
+                }
+                break;
+            case "Exercise - Steps":
+                averageDayVal.setText("Average daily amount: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
+                if(dailyAverage >= 10000) {
+                    averageDayVal.append("\n\nYour exercise levels in steps are great! Keep up the good work - exercise helps to maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                } else {
+                    averageDayVal.append("\n\nYour exercise levels are below the recommended daily amount. You should aim to complete 150 - 300 minutes of moderate intensity aerobic activity per week - this helps to " +
+                            "maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                }
+                break;
+            case "Exercise - Minutes":
+                averageDayVal.setText("Average daily amount: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
+                if(dailyAverage > 30) {
+                    averageDayVal.append("\n\nYour exercise levels in minutes are great! Keep up the good work - exercise helps to maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                } else {
+                    averageDayVal.append("\n\nYour exercise levels are below the recommended daily amount. You should aim to complete 150 - 300 minutes of moderate intensity aerobic activity per week - this helps to " +
+                            "maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                }
+                break;
+            case "Exercise - Hours":
+                averageDayVal.setText("Average daily amount: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
+                if(dailyAverage >= 1) {
+                    averageDayVal.append("\n\nYour exercise levels in hours are great! Keep up the good work - exercise helps to maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                } else {
+                    averageDayVal.append("\n\nYour exercise levels are below the recommended daily amount. You should aim to complete 150 - 300 minutes of moderate intensity aerobic activity per week - this helps to " +
+                            "maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
+                }
+                break;
+            case "Blood Pressure":
+                if((isRed && dailyAverage < 140) || (!isRed && dailyAverage < 90)) {
+                    if(!isRed) averageDayVal.append("\n\nYour blood pressure is ideal - it is below 140/90 mmHg. Keep up the good work!");
+                } else {
+                    if(highBp) {
+                        averageDayVal.append("\n\nYour blood pressure is high because the systolic value is equal to or above 140 mmHg and/or the diastolic value is equal to or greater than 90 mmHg. You should continue to monitor" +
+                                " your blood pressure and if your doctor is not already regularly measuring your blood pressure, you should arrange an appointment to have your blood pressure taken. You can also make lifestyle changes " +
+                                "to decrease your blood pressure - exercising regularly, maintaining a healthy weight, eating a diet low in sodium, and avoiding tobacco and alcohol will all help to decrease it.");
+                        highBp = false;
+                    }
+                    highBp = true;
+                }
+                break;
+            case "Alcohol Intake":
+                if(dailyAverage <= 2) {
+                    averageDayVal.append("\n\nYour alcohol intake is below the maximum recommended amount, though alcohol is associated with many health risks, both long and short time, so it is advised to minimise your alcoholic intake as much as possible.");
+                } else {
+                    averageDayVal.append("\n\nYour alcohol intake is above the maximum recommended amount - alcohol is associated with a range of health risks and contributes to high blood pressure. You should aim to reduce or eliminate your alcohol intake by " +
+                            "choosing non alcoholic drink options when available.");
+                }
+                break;
+            case "Tobacco Intake":
+                averageDayVal.append("\n\nAs tobacco is associated with so many health risks, there is no maximum recommended amount - you should try to reduce or eliminate your tobacco usage by choosing non-tobacco based products, using nicotine replacement" +
+                        " therapy or other medications if need be, and availing of support options from your medical team and the wider community");
+                break;
+            default:
+                averageDayVal.append("");
+                break;
+        }
     }
 
     private void readFromDatabase(String collection, String collection2, View view, int month, int year) {
@@ -411,6 +494,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
                     }
                     if(result.length() == 0) {
                         details.setText("You haven't logged any measurements for this item!");
+                        averageDayVal.setText("");
                     } else {
                         if(!collection2.equals("")) {
                             CollectionReference docRef2 = db.collection("inputData").document(user.getEmail()).collection(collection2);

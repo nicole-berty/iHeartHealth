@@ -99,15 +99,13 @@
 
                 <TextView
                     android:id="@+id/averageMonthVal"
-                    android:layout_width="312dp"
-                    android:layout_height="150dp"
+                    android:layout_width="368dp"
+                    android:layout_height="619dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="48dp"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.494"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chart1"
-                    app:layout_constraintVertical_bias="0.306" />
+                    app:layout_constraintTop_toBottomOf="@+id/chart1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </HorizontalScrollView>
