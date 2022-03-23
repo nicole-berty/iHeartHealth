@@ -100,9 +100,8 @@
                 <TextView
                     android:id="@+id/averageMonthVal"
                     android:layout_width="312dp"
-                    android:layout_height="344dp"
-                    android:layout_marginTop="68dp"
-                    android:layout_marginBottom="140dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="48dp"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.494"
