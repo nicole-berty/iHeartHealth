@@ -48,6 +48,8 @@
     <string name="alcohol_info">Alcohol is associated with many health risks, both long and short time, so it is advised to minimise your alcoholic intake as much as possible. The risks of alcohol increase primarily in a dose-dependent manner with the volume consumed and with the frequency of drinking, and alcohol consumption contributes to over 3 million deaths per year globally.(<a href="https://www.who.int/health-topics/alcohol#tab=tab_1">World Health Organisation</a>).</string>
     <string name="tobacco_info">Tobacco is incredibly bad for your health and it kills as many as half of its users. Every year more than 7 million people die as a direct result of tobacco use. Monitoring your tobacco usage can help you to cut back on it and set goals for yourself with the aim or reducing or totally eliminating tobacco from your lifestyle  (<a href="https://www.who.int/news-room/fact-sheets/detail/tobacco">World Health Organisation</a>).</string>
 
+    <string name="source_who"><b>Source: </b>World Health Organisation</string>
+
     <string-array name="measurements_array">
         <item>Sodium</item>
         <item>Calories</item>

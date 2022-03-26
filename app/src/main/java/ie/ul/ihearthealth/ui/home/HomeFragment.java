@@ -2,6 +2,7 @@ package ie.ul.ihearthealth.ui.home;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment {
 
         TextView welcome = view.findViewById(R.id.welcome);
         recommendation = view.findViewById(R.id.recommendation);
+
         if(user != null && user.getDisplayName() != null && !user.getDisplayName().equals("")) welcome.setText("Welcome, " + user.getDisplayName() + "!");
         if(user != null) {
             lastReading = view.findViewById(R.id.lastReading);
@@ -158,5 +160,8 @@ public class HomeFragment extends Fragment {
         recommendation.append(" \u2022Keep your daily sodium intake below 2500mg\n");
         recommendation.append(" \u2022Make sure your caloric intake matches your energy expenditure\n");
         recommendation.append(" \u2022Minimise your intake of alcohol and tobacco\n");
+
+        recommendation.append("\n\n");
+        recommendation.append(getResources().getString(R.string.source_who));
     }
 }
