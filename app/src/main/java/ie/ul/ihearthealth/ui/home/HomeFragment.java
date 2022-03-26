@@ -1,47 +1,33 @@
 package ie.ul.ihearthealth.ui.home;
 
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.LocaleList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.core.utilities.Tree;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Text;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.ui.track_monitor.TrackFragment;
 
 public class HomeFragment extends Fragment {
     private FirebaseUser user;
@@ -70,7 +56,7 @@ public class HomeFragment extends Fragment {
 
         TextView welcome = view.findViewById(R.id.welcome);
         recommendation = view.findViewById(R.id.recommendation);
-        if(user != null && user.getDisplayName() != null) welcome.setText("Welcome, " + user.getDisplayName() + "!");
+        if(user != null && user.getDisplayName() != null && !user.getDisplayName().equals("")) welcome.setText("Welcome, " + user.getDisplayName() + "!");
         if(user != null) {
             lastReading = view.findViewById(R.id.lastReading);
             recommendation.setText("");
@@ -116,9 +102,10 @@ public class HomeFragment extends Fragment {
                             dates.add(LocalDate.parse(document.getId()));
                         }
                     }
-                    String systolicVal = getLastValue(systolicData, false);
-                    systolicValue = Integer.parseInt(systolicVal);
-                    if (!collection2.equals("")) {
+                    if(systolicData != null && systolicData.lastEntry() != null) {
+                        String systolicVal = getLastValue(systolicData, false);
+                        systolicValue = Integer.parseInt(systolicVal);
+                        if (!collection2.equals("")) {
                             CollectionReference docRef2 = db.collection("inputData").document(user.getEmail()).collection(collection2);
                             docRef2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -133,13 +120,17 @@ public class HomeFragment extends Fragment {
                                             }
                                         }
                                         String diastolicVal = getLastValue(diastolicData, true);
-                                        diastolicValue = Integer.parseInt(diastolicVal.replace(" mmHg",""));
+                                        diastolicValue = Integer.parseInt(diastolicVal.replace(" mmHg", ""));
                                         lastReading.setText(" \t\t\t" + systolicVal + "/" + diastolicVal + "\t\t\t\t ");
                                         updateRecommendation();
                                     }
                                 }
                             });
                         }
+                    } else {
+                        lastReading.setText("\t\t\tNo data provided\t\t\t");
+                        recommendation.setText("Please log some blood pressure measurements in the track & monitor section of the application to receive recommendations.");
+                    }
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.getException());
                 }
@@ -150,12 +141,12 @@ public class HomeFragment extends Fragment {
     private void updateRecommendation() {
         if(systolicValue < 140 && diastolicValue < 90) {
             recommendation.setText("Your blood pressure is within the ideal range - your systolic blood pressure is below 140 mmHg and your diastolic" +
-                    " blood pressure is below 90 mmHg. To maintain a healthy blood pressure, follow these tips: \n\n");
+                    " blood pressure is below 90 mmHg. To continue to maintain a healthy blood pressure, follow these tips: \n\n");
             recommendation.append(" \u2022Have your blood pressure measured at least annually by a healthcare professional\n");
             lastReading.setBackground(getResources().getDrawable(R.drawable.rounded_textview));
         } else {
             lastReading.setBackground(getResources().getDrawable(R.drawable.rounded_textview_red));
-            recommendation.setText("Your blood pressure is above the ideal range. If this was a measurement you took at home, and your blood" +
+            recommendation.setText("Your blood pressure is above the ideal range - your blood pressure should be below 140/90 and if either one or both of the values are equal to or greater than this, your blood pressure is high. \n\nIf this was a measurement you took at home, and your blood" +
                     " pressure has been above 140/90 several times, you should have your blood pressure taken by a medical professional. " +
                     "Your doctor will come up with a treatment plan to manage your blood pressure, which will include lifestyle changes and" +
                     " possibly medication." +

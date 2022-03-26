@@ -24,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ie.ul.ihearthealth.R;
@@ -33,6 +32,7 @@ public class ReminderFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseUser user;
     private RecyclerView recyclerView;
+    private TextView tv;
     private RecyclerView.Adapter adapter;
     private List<Medicine> medicines;
 
@@ -54,6 +54,7 @@ public class ReminderFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        tv = view.findViewById(R.id.textView3);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,10 +111,19 @@ public class ReminderFragment extends Fragment {
                     String allReminders = snapshot.getData().toString().replace("{", "");
                     allReminders = allReminders.replace("}", "");
                     String[] splitReminders = allReminders.split(",");
-                    List<Medicine> h = getMedicineList(splitReminders);
-                    loadMedicines(h);
+                    List<Medicine> medicines = getMedicineList(splitReminders);
+                    if(medicines.size() > 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        tv.setVisibility(View.INVISIBLE);
+                        loadMedicines(medicines);
+                    } else {
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        tv.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     Log.d("TAG", "Current data: null");
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    tv.setVisibility(View.VISIBLE);
                 }
             }
         });

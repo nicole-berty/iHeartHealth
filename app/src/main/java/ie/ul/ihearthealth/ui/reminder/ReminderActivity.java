@@ -8,7 +8,6 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,15 +35,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.R;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -263,9 +258,9 @@ public class ReminderActivity extends AppCompatActivity {
                     int selectedId = radioGroup.getCheckedRadioButtonId();
                     // find the radiobutton by returned id
                     repeatAmount = (RadioButton) findViewById(selectedId);
-                    dataString = dataString + ";Repeats:" + repeatAmount.getText();
+                    dataString = dataString + ";Repeats: " + repeatAmount.getText();
                 } else {
-                   dataString += ";Repeats:None";
+                   dataString += ";Repeats: None";
                 }
                 data.put(currentDateTimeStr, dataString);
                 writeToDatabase(data);

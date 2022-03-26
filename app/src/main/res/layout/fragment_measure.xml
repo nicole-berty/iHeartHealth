@@ -121,6 +121,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="195dp"
+                android:layout_height="78dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/evaluation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.546"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -137,15 +148,21 @@
         <RadioButton
             android:id="@+id/nav_track_button"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
+            android:layout_width="106dp"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:paddingLeft="40px"
+            android:drawableStart="@drawable/outline_add_chart_24"
             android:text="Add Measurements"
             android:textColor="@color/white" />
 
         <RadioButton
             android:id="@+id/nav_monitor_button"
             style="@style/AppTheme.RadioButtonLikeBottomNavigationView"
-            android:checked="true"
             android:text="Monitor"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:paddingLeft="40px"
+            android:drawableStart="@drawable/outline_insights_24" />
 
     </RadioGroup>
 

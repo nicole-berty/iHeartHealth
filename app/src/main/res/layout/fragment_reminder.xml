@@ -5,16 +5,28 @@
     android:padding="8dp"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="355dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="659dp"
+        android:text="You haven't set up any reminders yet!"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_medicine"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:id="@+id/recycler_view_medicine">
+            android:scrollbars="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>
 

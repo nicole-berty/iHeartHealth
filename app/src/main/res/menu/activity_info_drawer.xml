@@ -7,19 +7,19 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/ht_definition"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/outline_school_24"
             android:title="Learn about Hypertension"/>
         <item
             android:id="@+id/htRisks"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/outline_contact_support_24"
             android:title="Available Resources" />
         <item
             android:id="@+id/bpMeasurement"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/outline_query_stats_24"
             android:title="Measuring Blood Pressure" />
         <item
             android:id="@+id/healthcareComms"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/outline_question_answer_24"
             android:title="Healthcare Communication" />
     </group>
 

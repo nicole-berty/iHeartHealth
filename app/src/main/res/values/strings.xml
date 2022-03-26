@@ -23,8 +23,7 @@
     <string name="facebook_app_id">325552782771702</string>
     <string name="fb_login_protocol_scheme">fb325552782771702</string>
     <string name="facebook_client_token">64535ec15a57af9aa766951b1acda915</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -111,6 +110,8 @@
         <item>micrograms</item>
         <item>tablets</item>
         <item>injections</item>
+        <item>sachets</item>
+        <item>tubes</item>
     </string-array>
 
     <string name="title_activity_my_marker_view">MyMarkerView</string>

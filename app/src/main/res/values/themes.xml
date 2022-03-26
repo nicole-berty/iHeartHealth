@@ -40,4 +40,15 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">#e4837c</item>
     </style>
+
+    <style name="AppThemeFirebaseAuth" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:actionBarStyle">@style/FirebaseAuthActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="FirebaseAuthActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/ihh_pink</item>
+    </style>
 </resources>

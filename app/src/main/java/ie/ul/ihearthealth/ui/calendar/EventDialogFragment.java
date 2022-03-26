@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Calendar;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.ui.reminder.ReminderActivity;
 
 public class EventDialogFragment extends DialogFragment implements DialogInterface.OnShowListener {
 
@@ -63,7 +62,7 @@ public class EventDialogFragment extends DialogFragment implements DialogInterfa
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             // Get the layout inflater
             LayoutInflater inflater = requireActivity().getLayoutInflater();
-            View v = inflater.inflate(R.layout.fragment_event_dialog,null);
+            View v = inflater.inflate(R.layout.dialog_calendar_event,null);
             timePickerButton = v.findViewById(R.id.pick_time_button);
             datePickerButton = v.findViewById(R.id.date_button);
             timeText = v.findViewById(R.id.preview_picked_time_textView);

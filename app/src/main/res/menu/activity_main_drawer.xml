@@ -8,19 +8,19 @@
         android:id="@+id/menu_top">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/outline_home_24"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_measurements"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/outline_timeline_24"
             android:title="Track &amp; Monitor" />
         <item
             android:id="@+id/nav_reminders"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Reminders" />
+            android:icon="@drawable/outline_notification_add_24"
+            android:title="Medication Reminders" />
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/outline_event_24"
             android:title="Calendar" />
     </group>
     <group
@@ -28,23 +28,28 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_info"
-            android:title="Hypertension Information"/>
-        <!-- android:icon="@drawable/settings_cog" -->
+            android:title="Hypertension Information"
+            android:icon="@drawable/outline_medical_information_24" />
         <item
             android:id="@+id/nav_chat"
-            android:title="Chat with Others"/>
+            android:title="Chat with Others"
+            android:icon="@drawable/outline_chat_24" />
     </group>
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_google_fit"
+            android:title="Google Fit"
+            android:icon="@drawable/outline_fitness_center_24" />
+        <item
             android:id="@+id/nav_settings"
             android:title="@string/menu_settings"
+            android:icon="@drawable/outline_settings_24"
             />
-        <!-- android:icon="@drawable/settings_cog" -->
         <item
             android:id="@+id/logOut"
-            android:title="Log Out"/>
-            <!-- android:icon="@drawable/ic_android_signout_24px" -->
+            android:title="Log Out"
+            android:icon="@drawable/outline_logout_24" />
     </group>
 </menu>

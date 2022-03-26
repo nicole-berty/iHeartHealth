@@ -31,30 +31,35 @@
                     android:id="@+id/dosage_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
                     android:text="Dosage" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/desc_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
                     android:text="Description" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/time_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
                     android:text="Time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/start_date_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
                     android:text="Start date" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/repeats_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="18sp"
                     android:text="Repeats" />
 
             </LinearLayout>
