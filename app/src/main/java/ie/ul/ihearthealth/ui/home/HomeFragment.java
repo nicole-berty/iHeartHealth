@@ -70,11 +70,12 @@ public class HomeFragment extends Fragment {
 
         TextView welcome = view.findViewById(R.id.welcome);
         recommendation = view.findViewById(R.id.recommendation);
-        if(user.getDisplayName() != null) welcome.setText("Welcome, " + user.getDisplayName() + "!");
-
-        lastReading = view.findViewById(R.id.lastReading);
-        recommendation.setText("");
-        readFromDatabase("Systolic Blood Pressure", "Diastolic Blood Pressure");
+        if(user != null && user.getDisplayName() != null) welcome.setText("Welcome, " + user.getDisplayName() + "!");
+        if(user != null) {
+            lastReading = view.findViewById(R.id.lastReading);
+            recommendation.setText("");
+            readFromDatabase("Systolic Blood Pressure", "Diastolic Blood Pressure");
+        }
     }
 
     private String getLastValue(TreeMap<LocalDate,String> map, boolean isDiastolic) {

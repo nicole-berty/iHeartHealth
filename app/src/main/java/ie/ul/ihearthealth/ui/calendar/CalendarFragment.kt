@@ -344,6 +344,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                     details[2] = details[2].replace("Appointment Date: ", "")
                     loadEvent(splitAppointment[0], details[0], details[1],LocalDate.parse(details[2]))
                     updateAdapterForDate(LocalDate.parse(details[2]))
+                    binding.exThreeCalendar.notifyCalendarChanged()
                 }
             } else {
                 Log.d("TAG", "Current data: null")
@@ -354,7 +355,6 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
     private fun deleteFromDatabase(id: String) {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
 
-        print("DELETE ID is" + id)
         val updates: MutableMap<String, Any> = HashMap()
         updates[id] = FieldValue.delete()
 
