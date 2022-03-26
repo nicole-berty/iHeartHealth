@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,6 +34,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -85,7 +88,6 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         });
 
         EditText measurement = view.findViewById(R.id.measurement);
-        EditText systolicVal = view.findViewById(R.id.systolicVal);
 
         Spinner measurementSpinner = (Spinner) view.findViewById(R.id.spinner);
         Spinner unitSpinner = (Spinner) view.findViewById(R.id.spinner2);
@@ -125,6 +127,17 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         // Specify the layout to use when the list of choices appears
         exerciseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        Button submit = view.findViewById(R.id.submit);
+
+        NumberPicker systolicValue = (NumberPicker) view.findViewById(R.id.systolicValue);
+        systolicValue.setMinValue(0);
+        systolicValue.setMaxValue(250);
+        NumberPicker diastolicValue = (NumberPicker) view.findViewById(R.id.diastolicVal);
+        diastolicValue.setMinValue(0);
+        diastolicValue.setMaxValue(250);
+
+        TextView bp_slash = view.findViewById(R.id.bp_forward_slash);
+
         TextView infoTv = view.findViewById(R.id.infoTv);
         infoTv.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -132,7 +145,11 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String spinnerValue = measurementSpinner.getSelectedItem().toString();
-                systolicVal.setVisibility(View.INVISIBLE);
+                systolicValue.setVisibility(View.INVISIBLE);
+                diastolicValue.setVisibility(View.INVISIBLE);
+                bp_slash.setVisibility(View.INVISIBLE);
+                measurement.setVisibility(View.VISIBLE);
+                submit.setEnabled(false);
                 measurement.setHint("Value");
                 switch (spinnerValue) {
                     case "Sodium":
@@ -145,9 +162,14 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                         break;
                     case "Blood Pressure":
                         unitSpinner.setAdapter(bpAdapter);
-                        systolicVal.setVisibility(View.VISIBLE);
-                        measurement.setHint("Dystolic Value");
+                        systolicValue.setVisibility(View.VISIBLE);
+                        diastolicValue.setVisibility(View.VISIBLE);
+                        bp_slash.setVisibility(View.VISIBLE);
+                        measurement.setVisibility(View.INVISIBLE);
+                        systolicValue.setValue(120);
+                        diastolicValue.setValue(90);
                         infoTv.setText(R.string.bp_info);
+                        submit.setEnabled(true);
                         break;
                     case "Alcohol Intake":
                         unitSpinner.setAdapter(alcoholAdapter);
@@ -169,22 +191,17 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
 
-        Button submit = view.findViewById(R.id.submit);
-
-        systolicVal.addTextChangedListener(new TextWatcher() {
+        systolicValue.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                submit.setEnabled(newVal > 0 && diastolicValue.getValue() > 0 && newVal > diastolicValue.getValue());
             }
+        });
 
+        diastolicValue.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                submit.setEnabled(measurement.getText().toString().length() > 0 && systolicVal.getText().toString().length() > 0);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void onValueChange(NumberPicker picker2, int oldVal, int newVal){
+                submit.setEnabled(newVal > 0 && systolicValue.getValue() > 0 && newVal < systolicValue.getValue());
             }
         });
 
@@ -196,11 +213,7 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(systolicVal.getVisibility() == View.VISIBLE) {
-                    submit.setEnabled(measurement.getText().toString().length() > 0 && systolicVal.getText().toString().length() > 0);
-                } else {
-                    submit.setEnabled(measurement.getText().toString().length() > 0);
-                }
+                submit.setEnabled(measurement.getText().toString().length() > 0);
             }
 
             @Override
@@ -214,7 +227,6 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
             @Override
             public void onClick(View view) {
                 Map<String, String> data = new HashMap<>();
-                systolicVal.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 measurement.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 Date currentDateTime = Calendar.getInstance().getTime();
 
@@ -225,18 +237,18 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                 String[] splitCurrDateTime = currentDateTime.toString().split(" ");
                 String currentDate = formattedDate;
                 String currentTime = splitCurrDateTime[3];
-                if(systolicVal.getVisibility() == View.VISIBLE) {
-                    data.put(currentTime, systolicVal.getText().toString().replaceAll("\\s+","") + " " + unitSpinner.getSelectedItem().toString());
+                if(systolicValue.getVisibility() == View.VISIBLE) {
+                    data.put(currentTime, systolicValue.getValue() + " " + unitSpinner.getSelectedItem().toString());
                     writeToDatabase("Systolic Blood Pressure", currentDate, data);
                     collection = "Diastolic Blood Pressure";
+                    data.put(currentTime, diastolicValue.getValue() + " " + unitSpinner.getSelectedItem().toString());
                 } else {
                     if(measurementSpinner.getSelectedItem().toString().equals("Exercise")) {
                         collection = measurementSpinner.getSelectedItem().toString() + " - " + unitSpinner.getSelectedItem().toString();
                     }
+                    data.put(currentTime, measurement.getText().toString().replaceAll("\\s+","") + " " + unitSpinner.getSelectedItem().toString());
                 }
-                data.put(currentTime, measurement.getText().toString().replaceAll("\\s+","") + " " + unitSpinner.getSelectedItem().toString());
                 writeToDatabase(collection, currentDate, data);
-                systolicVal.setText("");
                 measurement.setText("");
             }
         });

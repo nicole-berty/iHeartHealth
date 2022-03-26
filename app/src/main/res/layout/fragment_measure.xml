@@ -71,29 +71,55 @@
                 android:id="@+id/infoTv"
                 android:layout_width="335dp"
                 android:layout_height="373dp"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="28dp"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.476"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/submit"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/submit" />
 
-            <EditText
-                android:id="@+id/systolicVal"
-                android:layout_width="135dp"
+            <NumberPicker
+                android:id="@+id/systolicValue"
+                android:layout_width="49dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="140dp"
-                android:hint="Systolic Value"
+                android:layout_marginStart="152dp"
+                android:layout_marginTop="112dp"
                 android:inputType="numberSigned"
                 android:textAlignment="center"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/measurement"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.631" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bp_forward_slash"
+                android:layout_width="19dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="112dp"
+                android:text="/"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.512"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <NumberPicker
+                android:id="@+id/diastolicVal"
+                android:layout_width="46dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="112dp"
+                android:layout_marginEnd="144dp"
+                android:inputType="numberSigned"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
