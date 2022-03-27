@@ -1,5 +1,6 @@
 package ie.ul.ihearthealth.ui.calendar
 
+import android.content.Context
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,12 +17,19 @@ abstract class BaseFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes) {
     val homeActivityToolbar: Toolbar
         get() = (requireActivity() as CalendarActivity).binding.homeToolbar
 
+    private var mContext: Context? = null
+
+    // Initialise context from onAttach()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onStart() {
         super.onStart()
         if (this is HasToolbar) {
             homeActivityToolbar.makeGone()
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-            homeActivityToolbar.setTitleTextColor(R.color.white)
+            homeActivityToolbar.setTitleTextColor(mContext?.resources!!.getColor(R.color.white))
         }
 
         if (this is HasBackButton) {
@@ -35,7 +43,7 @@ abstract class BaseFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes) {
         super.onStop()
         if (this is HasToolbar) {
             homeActivityToolbar.makeVisible()
-            homeActivityToolbar.setTitleTextColor(R.color.white)
+            homeActivityToolbar.setTitleTextColor(resources.getColor(R.color.white))
             (requireActivity() as AppCompatActivity).setSupportActionBar(homeActivityToolbar)
         }
 

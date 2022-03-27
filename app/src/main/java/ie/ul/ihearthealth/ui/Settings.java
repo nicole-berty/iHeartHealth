@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,8 +35,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -46,13 +49,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Settings extends Fragment implements AlertDialogFragment.AlertDialogListener {
     FirebaseUser user;
     boolean usingProvider = false;
@@ -60,6 +65,17 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
     EditText email;
     EditText pass;
     AuthCredential credential;
+    FirebaseFirestore db;
+    String userEmail;
+
+    private Context mContext;
+
+    // Initialise context from onAttach()
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     public Settings() {
         // Required empty public constructor
@@ -86,6 +102,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
         email = view.findViewById(R.id.email_address);
         pass = view.findViewById(R.id.password);
+        user = mAuth.getCurrentUser();
+        if(user != null) userEmail = user.getEmail();
         EditText repeatPass = view.findViewById(R.id.password2);
 
         Button btn_change_email = view.findViewById(R.id.btn_change_email);
@@ -103,7 +121,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                 break;
         }
 
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -119,8 +137,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
             }
         });
 
-        user = mAuth.getCurrentUser();
-        email.setText(user.getEmail());
+        email.setText(userEmail);
+        db = FirebaseFirestore.getInstance();
         if(user.getDisplayName() != null) name.setText(user.getDisplayName());
         String[] strProvider = {""};
 
@@ -237,9 +255,9 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                 .requestEmail()
                                 .build();
 
-                        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                        mGoogleSignInClient = GoogleSignIn.getClient(mContext, gso);
                         mGoogleSignInClient.silentSignIn()
-                                .addOnCompleteListener(getActivity(),
+                                .addOnCompleteListener(requireActivity(),
                                         new OnCompleteListener<GoogleSignInAccount>() {
                                             @Override
                                             public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
@@ -260,19 +278,70 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         });
     }
 
-    void deleteAccount() {
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User account deleted.");
-                            Intent intent = new Intent(getContext(), LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+    void deleteUserData() {
+        for(String s : new String[]{"Diastolic Blood Pressure", "Systolic Blood Pressure", "Calories",
+            "Alcohol Intake", "Exercise - Hours", "Exercise - Minutes", "Exercise - Steps", "Sodium",
+            "Tobacco Intake"}) {
+            readFromDatabase(s);
+        }
+
+        deleteUserDocument("reminders");
+        deleteUserDocument("calendar");
+        deleteUserDocument("inputData");
+    }
+
+    private void readFromDatabase(String collection) {
+        CollectionReference docRef = db.collection("inputData").document(userEmail).collection(collection);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    StringBuilder result = new StringBuilder();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("TAG", document.getId() + " => " + document.getData());
+                        result.append(document.getId()).append(" ").append(document.getData()).append("\n");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            DocumentReference docRef2 = db.collection("inputData").document(userEmail).collection(collection).document(document.getId());
+                            docRef2.delete().addOnSuccessListener(aVoid -> Snackbar.make(getView(), "Deleted!", Snackbar.LENGTH_LONG).show());
                         }
                     }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void deleteUserDocument(String collection) {
+        db.collection(collection).document(userEmail)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        if(collection.equals("inputData")) {
+                            user.delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User account deleted.");
+                                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
                 });
+
     }
 
     public void showNoticeDialog() {
@@ -319,13 +388,14 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                             }
                                         });
                             } else if(change.equals("delete")) {
-                                deleteAccount();
+                                deleteUserData();
                             } else {
                                 user.updateEmail(email.getText().toString())
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    userEmail = email.getText().toString();
                                                     Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_LONG).show();
                                                 } else {
                                                     try

@@ -1,5 +1,7 @@
 package ie.ul.ihearthealth;
 
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_measurements, R.id.nav_reminders, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_measurements, R.id.nav_reminders, R.id.nav_google_fit, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -156,20 +158,11 @@ public class MainActivity extends AppCompatActivity {
         logOutItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-            //do your stuff
                 logout();
                 return true;
             }
         });
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACTIVITY_RECOGNITION},
-                    123);
-        } else {
-            Toast.makeText(this, "Granted", Toast.LENGTH_LONG).show();
-        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -189,13 +182,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         View headerView = navigationView.getHeaderView(0);
@@ -208,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
         FirebaseAuth.getInstance().signOut();
         // Log out of Facebook also
         LoginManager.getInstance().logOut();

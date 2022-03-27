@@ -377,6 +377,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                     "Appointment added successfully!",
                     Toast.LENGTH_LONG
                 ).show()
+                binding.exThreeCalendar.notifyCalendarChanged()
             })
             .addOnFailureListener(OnFailureListener { e ->
                 Log.w("TAG", "Error writing document", e)

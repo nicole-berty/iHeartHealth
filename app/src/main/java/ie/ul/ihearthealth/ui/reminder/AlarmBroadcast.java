@@ -10,6 +10,7 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
@@ -40,6 +41,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("Time to take " + intent.getStringExtra("medicineName")))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSound((Uri)intent.getParcelableExtra("Ringtone"))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(false);
 

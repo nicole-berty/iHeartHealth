@@ -1,5 +1,6 @@
 package ie.ul.ihearthealth.ui.reminder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,15 @@ public class ReminderFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private List<Medicine> medicines;
 
+    private Context mContext;
+
+    // Initialise context from onAttach()
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +78,15 @@ public class ReminderFragment extends Fragment {
         medicines = new ArrayList<Medicine>();
         recyclerView = view.findViewById(R.id.recycler_view_medicine);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RecyclerAdapter(new ArrayList<>(), getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        adapter = new RecyclerAdapter(new ArrayList<>(), mContext);
         recyclerView.setAdapter(adapter);
         readFromDatabase();
     }
 
     public void loadMedicines(List<Medicine> data) {
         medicines = data;
-        recyclerView.setAdapter(new RecyclerAdapter(medicines, getActivity()));
+        recyclerView.setAdapter(new RecyclerAdapter(medicines, mContext));
         recyclerView.invalidate();
     }
 

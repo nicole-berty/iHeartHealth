@@ -35,8 +35,8 @@
 
             <TextView
                 android:id="@+id/welcome"
-                android:layout_width="214dp"
-                android:layout_height="38dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Welcome!"
                 android:textAlignment="center"

@@ -1,8 +1,8 @@
 package ie.ul.ihearthealth.ui.home;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 import ie.ul.ihearthealth.R;
@@ -39,6 +38,15 @@ public class HomeFragment extends Fragment {
     TextView recommendation;
     int systolicValue;
     int diastolicValue;
+
+    private Context mContext;
+
+    // Initialise context from onAttach()
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +97,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void readFromDatabase(String collection, String collection2) {
-        ArrayList<LocalDate> dates = new ArrayList<>();
         CollectionReference docRef = db.collection("inputData").document(user.getEmail()).collection(collection);
         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -101,7 +108,6 @@ public class HomeFragment extends Fragment {
                         result.append(document.getId()).append(" ").append(document.getData()).append("\n");
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             systolicData.put(LocalDate.parse(document.getId()), document.getData().toString());
-                            dates.add(LocalDate.parse(document.getId()));
                         }
                     }
                     if(systolicData != null && systolicData.lastEntry() != null) {
@@ -145,9 +151,9 @@ public class HomeFragment extends Fragment {
             recommendation.setText("Your blood pressure is within the ideal range - your systolic blood pressure is below 140 mmHg and your diastolic" +
                     " blood pressure is below 90 mmHg. To continue to maintain a healthy blood pressure, follow these tips: \n\n");
             recommendation.append(" \u2022Have your blood pressure measured at least annually by a healthcare professional\n");
-            lastReading.setBackground(getResources().getDrawable(R.drawable.rounded_textview));
+            lastReading.setBackground(mContext.getResources().getDrawable(R.drawable.rounded_textview));
         } else {
-            lastReading.setBackground(getResources().getDrawable(R.drawable.rounded_textview_red));
+            lastReading.setBackground(mContext.getResources().getDrawable(R.drawable.rounded_textview_red));
             recommendation.setText("Your blood pressure is above the ideal range - your blood pressure should be below 140/90 and if either one or both of the values are equal to or greater than this, your blood pressure is high. \n\nIf this was a measurement you took at home, and your blood" +
                     " pressure has been above 140/90 several times, you should have your blood pressure taken by a medical professional. " +
                     "Your doctor will come up with a treatment plan to manage your blood pressure, which will include lifestyle changes and" +
@@ -162,6 +168,6 @@ public class HomeFragment extends Fragment {
         recommendation.append(" \u2022Minimise your intake of alcohol and tobacco\n");
 
         recommendation.append("\n\n");
-        recommendation.append(getResources().getString(R.string.source_who));
+        recommendation.append(mContext.getResources().getString(R.string.source_who));
     }
 }

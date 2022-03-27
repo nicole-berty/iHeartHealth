@@ -81,14 +81,14 @@
                 android:id="@+id/systolicValue"
                 android:layout_width="49dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="152dp"
+                android:layout_marginStart="108dp"
                 android:layout_marginTop="112dp"
                 android:inputType="numberSigned"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:visibility="invisible"
-                android:scaleX="1.5"
-                android:scaleY="1.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,9 +101,8 @@
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.512"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/diastolicVal"
+                app:layout_constraintStart_toEndOf="@+id/systolicValue"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <NumberPicker
@@ -111,12 +110,12 @@
                 android:layout_width="46dp"
                 android:layout_height="54dp"
                 android:layout_marginTop="112dp"
-                android:layout_marginEnd="144dp"
+                android:layout_marginEnd="124dp"
                 android:inputType="numberSigned"
-                android:textAlignment="center"
-                android:textSize="24sp"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -5,10 +5,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -27,9 +26,10 @@ import android.widget.Toast;
 
 import ie.ul.ihearthealth.HypertensionInfo;
 import ie.ul.ihearthealth.MainActivity;
-import ie.ul.ihearthealth.databinding.FragmentLoginBinding;
 
 import ie.ul.ihearthealth.R;
+import ie.ul.ihearthealth.databinding.FragmentLoginBinding;
+
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -56,6 +56,7 @@ import java.util.List;
 
 public class LoginFragment extends Fragment {
 
+    ProgressBar loadingProgressBar;
     private static final String TAG = "EmailPassword";
     private static final int RC_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
@@ -63,6 +64,15 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private FirebaseAuth mAuth;
     CallbackManager callbackManager;
+
+    private Context mContext;
+
+    // Initialise context from onAttach()
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     @Nullable
     @Override
@@ -90,7 +100,7 @@ public class LoginFragment extends Fragment {
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(mContext, gso);
         //If the user is not null, i.e. is logged in
         if(user != null) {
             moveToHomeActivity();
@@ -104,14 +114,14 @@ public class LoginFragment extends Fragment {
         final TextView infoButton = binding.infoButton;
         final Button loginButton = binding.login;
         final TextView registerButton = binding.register;
-        final ProgressBar loadingProgressBar = binding.loading;
+        loadingProgressBar = binding.loading;
         LoginButton fbLoginButton = binding.fbLoginButton;
         SignInButton googleLoginButton = binding.googleSignInButton;
 
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), HypertensionInfo.class);
+                Intent intent = new Intent(mContext, HypertensionInfo.class);
                 startActivity(intent);
             }
         });
@@ -139,21 +149,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-            }
-        });
+
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -178,10 +174,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
+
                 return false;
             }
         });
@@ -190,8 +183,6 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 logIn(email, password);
@@ -240,7 +231,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void moveToHomeActivity() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(mContext, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -266,7 +257,7 @@ public class LoginFragment extends Fragment {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
+                            Toast.makeText(mContext, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -328,28 +319,13 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             moveToHomeActivity();
                         } else {
+                            loadingProgressBar.setVisibility(View.GONE);
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(getActivity(), "Authentication failed.",
+                            Toast.makeText(mContext, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
-
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    errorString,
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
