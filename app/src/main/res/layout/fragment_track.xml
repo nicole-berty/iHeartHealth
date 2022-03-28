@@ -81,7 +81,7 @@
                 android:id="@+id/systolicValue"
                 android:layout_width="49dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="108dp"
+                android:layout_marginStart="140dp"
                 android:layout_marginTop="112dp"
                 android:inputType="numberSigned"
                 android:scaleX="1.5"

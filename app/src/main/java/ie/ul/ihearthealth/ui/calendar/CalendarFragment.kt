@@ -305,7 +305,6 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         } else {
             if((dialog as EventDialogFragment).isNewEvent) {
                 val id = saveEvent(appointmentName.text.toString(), appointmentTime.text.toString(), dialog.eventDate)
-                System.out.println("events 2 are ");
                 for ((k, v) in events) {
                     println("$k = $v")
                 }

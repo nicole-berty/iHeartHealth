@@ -158,7 +158,6 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         dataSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Toast.makeText(getContext(), "item is " + dataSpinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
                 monthSpinner.setSelection(0);
                 if(!(chart == null)) chart.clear();
                 if(dataSpinner.getSelectedItem().toString().equals("Blood Pressure")) {
@@ -386,7 +385,6 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
             dailyAverage = dailyAverage / numDays;
         }
         if(isBPGraph) {
-            System.out.println("Num measurements is " + numMeasurements + " sum is " + dailyAverage);
             if(numDays > 1) {
                 dailyAverage = dailyAverage / numMeasurements;
             }
