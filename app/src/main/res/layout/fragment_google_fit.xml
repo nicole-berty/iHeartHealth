@@ -1,155 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Button
-        android:id="@+id/revokeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="28dp"
-        android:text="Revoke Permission"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/permissionTv" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/daily_step_count"
-        android:layout_width="222dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:gravity="center"
-        android:text="Today's Step Count is: "
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.44"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/daily_step_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_textview"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="0"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/daily_step_count" />
-
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:stretchColumns="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="114dp"
-                android:layout_height="match_parent"
-                android:padding="3dip"
-                android:text="Date"
-                android:textStyle="bold" />
-
-            <TextView
+            <Button
+                android:id="@+id/revokeButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="3dip"
-                android:text="Start Time"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="116dp"
+                android:layout_marginTop="28dp"
+                android:text="Revoke Permission"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/permissionTv" />
 
             <TextView
-                android:layout_width="103dp"
-                android:layout_height="match_parent"
-                android:padding="3dip"
-                android:text="End Time"
-                android:textStyle="bold" />
+                android:id="@+id/daily_step_count"
+                android:layout_width="222dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="center"
+                android:text="Today's Step Count is: "
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.44"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:layout_width="83dp"
-                android:layout_height="match_parent"
-                android:padding="3dip"
-                android:text="Steps"
-                android:textStyle="bold" />
+                android:id="@+id/daily_step_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_textview"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/daily_step_count" />
 
-        </TableRow>
-    </TableLayout>
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="378dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:stretchColumns="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="284dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="Step count for the past week:"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.398"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/daily_step_counter" />
+                <TableRow>
 
-    <TextView
-        android:id="@+id/permissionTv"
-        android:layout_width="297dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Don't want to share your fitness data with iHeartHealth anymore?\nPress the button below to revoke these permissions and we'll stop reading your data."
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareData" />
+                    <TextView
+                        android:layout_width="114dp"
+                        android:layout_height="match_parent"
+                        android:padding="3dip"
+                        android:text="Date"
+                        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/noData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="18sp"
-        android:text="No data available"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="3dip"
+                        android:text="Start Time"
+                        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/shareDataTv"
-        android:layout_width="345dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:textAlignment="center"
-        android:text="@string/shareDataWithIhh"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+                    <TextView
+                        android:layout_width="103dp"
+                        android:layout_height="match_parent"
+                        android:padding="3dip"
+                        android:text="End Time"
+                        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/shareData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Send steps data to iHeartHealth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareDataTv" />
+                    <TextView
+                        android:layout_width="83dp"
+                        android:layout_height="match_parent"
+                        android:padding="3dip"
+                        android:text="Steps"
+                        android:textStyle="bold" />
+
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="284dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="Step count for the past week:"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.398"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/daily_step_counter" />
+
+            <TextView
+                android:id="@+id/permissionTv"
+                android:layout_width="297dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Don't want to share your fitness data with iHeartHealth anymore?\nPress the button below to revoke these permissions and we'll stop reading your data."
+                android:textAlignment="center"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shareData" />
+
+            <TextView
+                android:id="@+id/noData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="No data available"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/shareDataTv"
+                android:layout_width="345dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:text="@string/shareDataWithIhh"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+            <Button
+                android:id="@+id/shareData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Send steps data to iHeartHealth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shareDataTv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class GoogleFitFragment extends Fragment {
-    private FitnessOptions fitnessOptions;
     private Context mContext;
     private TextView dailyStepCount;
     private TableLayout tl;
@@ -78,8 +77,6 @@ public class GoogleFitFragment extends Fragment {
                 getStepCountDelta();
                 getHistoricalStepData();
             }
-        } else {
-            System.out.println("No fitness permissions");
         }
     }
 
@@ -122,30 +119,26 @@ public class GoogleFitFragment extends Fragment {
         noData = view.findViewById(R.id.noData);
         dailyStepCount = view.findViewById(R.id.daily_step_counter);
         sendData = view.findViewById(R.id.shareData);
-        fitnessOptions = getFitnessOptions();
+
         dbDatasets = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions)) {
+        if(hasPermissions()) {
             getStepCountDelta();
             getHistoricalStepData();
         } else {
-            GoogleSignIn.requestPermissions(
-                    getActivity(),
-                    123,
-                    GoogleSignIn.getLastSignedInAccount(mContext),
-                    getFitnessOptions());
+            getPermissions();
         }
 
         Button revokeButton = view.findViewById(R.id.revokeButton);
         revokeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions)) {
+                if(hasPermissions()) {
                     Fitness.getRecordingClient(mContext, GoogleSignIn.getLastSignedInAccount(mContext))
                             .unsubscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE);
-                    GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder().addExtension(fitnessOptions).build();
+                    GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder().addExtension(getFitnessOptions()).build();
                     GoogleSignIn.getClient(mContext, signInOptions).revokeAccess();
 
                     Toast.makeText(mContext, "Permissions revoked, we'll stop reading your fitness data", Toast.LENGTH_SHORT).show();
@@ -161,7 +154,27 @@ public class GoogleFitFragment extends Fragment {
         });
     }
 
+    private boolean hasPermissions() {
+        FitnessOptions fitnessOptions = getFitnessOptions();
+        if(GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void getPermissions() {
+        GoogleSignIn.requestPermissions(
+                getActivity(),
+                123,
+                GoogleSignIn.getLastSignedInAccount(mContext),
+                getFitnessOptions());;
+    }
+
     private void getHistoricalStepData() {
+        if(!hasPermissions()) {
+            getPermissions();
+            return;
+        }
         DateTime current = new DateTime().withTimeAtStartOfDay();
         DataReadRequest request = new DataReadRequest.Builder()
                 .aggregate(dataSource)
@@ -286,6 +299,10 @@ public class GoogleFitFragment extends Fragment {
     }
 
     private void getStepCountDelta() {
+        if(!hasPermissions()) {
+            getPermissions();
+            return;
+        }
         Fitness.getHistoryClient(mContext, GoogleSignIn.getLastSignedInAccount(mContext))
                 .readDailyTotal(DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(
