@@ -91,6 +91,8 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                 dialog.eventName = it.appointmentName
                 dialog.eventTime = it.appointmentTime
                 dialog.eventDate = it.date
+                dialog.oldEventDate = it.date
+                dialog.event = it
                 dialog.show(childFragmentManager, "EventDialogFragment")
             }
             .show()
@@ -116,6 +118,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         dialog.eventName = ""
         dialog.eventTime = ""
         dialog.eventDate = null
+        dialog.oldEventDate = null
         dialog.isNewEvent = true
 
         binding = CalendarFragmentBinding.bind(view)
@@ -251,10 +254,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
     private fun saveEvent(name: String, time: String, date: LocalDate) : String {
         var id = UUID.randomUUID().toString()
         var exists = false
-        System.out.println("events 1 are ");
-        for ((k, v) in events) {
-            println("$k = $v")
-        }
+
         if(events[date] != null) {
             events[date]!!.forEach {
                 if(it.id == id) exists = true
@@ -315,10 +315,12 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                 data[id] = dataString
                 writeToDatabase(data, dialog.eventDate)
             } else {
+
                 val data = ("Appointment Name: " + appointmentName.text.toString() +
                         ";Appointment Time: " + appointmentTime.text.toString() + ";Appointment Date: " + appointmentDate.text.toString())
                 updateDatabase(dialog.eventId, data, LocalDate.parse(appointmentDate.text.toString()))
                 selectDate(dialog.eventDate)
+                events[dialog.oldEventDate] = events[dialog.oldEventDate].orEmpty().minus(dialog.event)
             }
         }
     }

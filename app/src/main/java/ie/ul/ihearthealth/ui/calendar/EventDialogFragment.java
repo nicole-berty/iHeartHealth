@@ -34,6 +34,8 @@ public class EventDialogFragment extends DialogFragment implements DialogInterfa
         Boolean isNewEvent = true;
         String eventId, eventName, eventTime;
         LocalDate eventDate;
+        LocalDate oldEventDate;
+        Event event;
 
     @Override
     public void onShow(DialogInterface dialogInterface) {
