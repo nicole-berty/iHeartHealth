@@ -227,13 +227,15 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         for ((date1, eventList) in events) {
             if(date1 == date) {
                 for(event in eventList) {
-                    if(event.id == id) {
+                    var eventId = event.id.replace(" ", "")
+                    var idNoSpace = id.replace(" ", "")
+                    if(eventId == idNoSpace) {
                         events[date] = events[date].orEmpty().minus(event)
                     }
                 }
             }
         }
-        events[date] = events[date].orEmpty().plus(Event(id, name, time, date))
+        events[date] = events[date].orEmpty().plus(Event(id.replace(" ", ""), name, time, date))
     }
 
     private fun selectDate(date: LocalDate) {
@@ -248,17 +250,24 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
 
     private fun saveEvent(name: String, time: String, date: LocalDate) : String {
         var id = UUID.randomUUID().toString()
-        events[date] = events[date].orEmpty().plus(Event(id, name, time, date))
-        selectDate(date)
-        updateAdapterForDate(date)
+        var exists = false
+        System.out.println("events 1 are ");
+        for ((k, v) in events) {
+            println("$k = $v")
+        }
+        if(events[date] != null) {
+            events[date]!!.forEach {
+                if(it.id == id) exists = true
+            }
+        }
+        if(!exists) events[date] = events[date].orEmpty().plus(Event(id.replace(" ", ""), name, time, date))
         return id
     }
 
     private fun deleteEvent(event: Event) {
         val date = event.date
         events[date] = events[date].orEmpty().minus(event)
-        deleteFromDatabase(event.id.replace(" ", ""))
-        updateAdapterForDate(date)
+        deleteFromDatabase(event.id.replace(" ", ""), date)
     }
 
     private fun updateAdapterForDate(date: LocalDate) {
@@ -296,17 +305,19 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         } else {
             if((dialog as EventDialogFragment).isNewEvent) {
                 val id = saveEvent(appointmentName.text.toString(), appointmentTime.text.toString(), dialog.eventDate)
+                System.out.println("events 2 are ");
+                for ((k, v) in events) {
+                    println("$k = $v")
+                }
                 val data = mutableMapOf<String, String>()
                 val dataString = ("Appointment Name: " + appointmentName.text.toString() +
                         ";Appointment Time: " + appointmentTime.text.toString() + ";Appointment Date: " + appointmentDate.text.toString())
                 data[id] = dataString
-                writeToDatabase(data)
+                writeToDatabase(data, dialog.eventDate)
             } else {
                 val data = ("Appointment Name: " + appointmentName.text.toString() +
                         ";Appointment Time: " + appointmentTime.text.toString() + ";Appointment Date: " + appointmentDate.text.toString())
-                updateDatabase(dialog.eventId, data)
-                events.clear()
-                readFromDatabase()
+                updateDatabase(dialog.eventId, data, LocalDate.parse(appointmentDate.text.toString()))
                 selectDate(dialog.eventDate)
             }
         }
@@ -315,11 +326,16 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
     override fun onDialogNegativeClick(dialog: DialogFragment?) {
     }
 
-    private fun updateDatabase(id: String, data: String) {
+    private fun updateDatabase(id: String, data: String, eventDate: LocalDate) {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
         docRef
             .update(id, data)
-            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully updated!") }
+            .addOnSuccessListener {
+                Log.d("TAG", "DocumentSnapshot successfully updated!")
+                selectDate(eventDate)
+                updateAdapterForDate(eventDate)
+                binding.exThreeCalendar.notifyCalendarChanged()
+            }
             .addOnFailureListener { e -> Log.w("TAG", "Error updating document", e) }
     }
 
@@ -338,13 +354,15 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                 val splitAppointments = allAppointments.split(",")
                 for (s in splitAppointments) {
                     val splitAppointment = s.split("=")
-                    val details = splitAppointment[1].split(";").toTypedArray()
-                    details[0] = details[0].replace("Appointment Name: ", "")
-                    details[1] = details[1].replace("Appointment Time: ", "")
-                    details[2] = details[2].replace("Appointment Date: ", "")
-                    loadEvent(splitAppointment[0], details[0], details[1],LocalDate.parse(details[2]))
-                    updateAdapterForDate(LocalDate.parse(details[2]))
-                    binding.exThreeCalendar.notifyCalendarChanged()
+                    if(splitAppointment.size > 1) {
+                        val details = splitAppointment[1].split(";").toTypedArray()
+                        details[0] = details[0].replace("Appointment Name: ", "")
+                        details[1] = details[1].replace("Appointment Time: ", "")
+                        details[2] = details[2].replace("Appointment Date: ", "")
+                        loadEvent(splitAppointment[0], details[0], details[1],LocalDate.parse(details[2]))
+                        updateAdapterForDate(LocalDate.parse(details[2]))
+                        binding.exThreeCalendar.notifyCalendarChanged()
+                    }
                 }
             } else {
                 Log.d("TAG", "Current data: null")
@@ -352,7 +370,7 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         })
     }
 
-    private fun deleteFromDatabase(id: String) {
+    private fun deleteFromDatabase(id: String, eventDate: LocalDate) {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
 
         val updates: MutableMap<String, Any> = HashMap()
@@ -364,10 +382,13 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                 "Appointment deleted",
                 Toast.LENGTH_LONG
             ).show()
+            selectDate(eventDate)
+            updateAdapterForDate(eventDate)
+            binding.exThreeCalendar.notifyCalendarChanged()
         }
     }
 
-    private fun writeToDatabase(data: Map<String, String>?) {
+    private fun writeToDatabase(data: Map<String, String>?, eventDate: LocalDate) {
         db.collection("calendar").document(user?.getEmail().toString())
             .set(data!!, SetOptions.merge())
             .addOnSuccessListener(OnSuccessListener<Void?> {
@@ -377,6 +398,8 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
                     "Appointment added successfully!",
                     Toast.LENGTH_LONG
                 ).show()
+                selectDate(eventDate)
+                updateAdapterForDate(eventDate)
                 binding.exThreeCalendar.notifyCalendarChanged()
             })
             .addOnFailureListener(OnFailureListener { e ->
