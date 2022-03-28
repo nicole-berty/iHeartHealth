@@ -95,10 +95,12 @@ public class ReminderFragment extends Fragment {
 
         for(String s : data) {
             String[] splitReminder = s.split("=");
-            String[] details = splitReminder[1].split(";");
-            details[0] = details[0].replace("Medicine Name: ", "");
-            Medicine medicine = new Medicine(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5]);
-            medicineList.add(medicine);
+            if(splitReminder.length > 1) {
+                String[] details = splitReminder[1].split(";");
+                details[0] = details[0].replace("Medicine Name: ", "");
+                Medicine medicine = new Medicine(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5]);
+                medicineList.add(medicine);
+            }
         }
 
         return medicineList;

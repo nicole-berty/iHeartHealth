@@ -249,7 +249,6 @@ public class ReminderActivity extends AppCompatActivity {
                 Date currentDateTime = Calendar.getInstance().getTime();
                 String currentDateTimeStr = currentDateTime.toString().replace("GMT ", "");
                 currentDateTimeStr = currentDateTimeStr.replace(" ", "-");
-                Toast.makeText(ReminderActivity.this, currentDateTime.toString(), Toast.LENGTH_LONG).show();
                 Map<String, String> data = new HashMap<>();
                 String dataString = "Medicine Name: " + medName.getText().toString() + ";Medicine Dosage: " + medDosage.getText().toString()
                         + " " + dosageSpinner.getSelectedItem().toString() + ";Medicine Description: " + medDesc.getText().toString() + ";Time: "
@@ -333,8 +332,6 @@ public class ReminderActivity extends AppCompatActivity {
         } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
         }
-
-        Toast.makeText(ReminderActivity.this, calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE), Toast.LENGTH_SHORT).show();
         Log.d("TAG", calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
 
 

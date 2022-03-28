@@ -43,7 +43,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound((Uri)intent.getParcelableExtra("Ringtone"))
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(false);
+                .setAutoCancel(true);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
