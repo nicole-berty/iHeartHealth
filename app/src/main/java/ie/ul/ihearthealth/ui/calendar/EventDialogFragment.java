@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -31,6 +32,7 @@ public class EventDialogFragment extends DialogFragment implements DialogInterfa
         private Button datePickerButton;
         private TextView timeText;
         private TextView dateText;
+        private EditText eventNameText;
         Boolean isNewEvent = true;
         String eventId, eventName, eventTime;
         LocalDate eventDate;
@@ -69,7 +71,13 @@ public class EventDialogFragment extends DialogFragment implements DialogInterfa
             datePickerButton = v.findViewById(R.id.date_button);
             timeText = v.findViewById(R.id.preview_picked_time_textView);
             dateText = v.findViewById(R.id.appointment_date);
+            eventNameText = v.findViewById(R.id.appointmentName);
             dateText.setText(eventDate.toString());
+
+            if(event != null) {
+                timeText.setText(eventTime);
+                eventNameText.setText(eventName);
+            }
             timePickerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
