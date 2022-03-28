@@ -104,4 +104,6 @@
     <string name="modify">Edit</string>
     <string name="calendar_dialog_action_confirmation">What would you like to do?</string>
     <string name="delete">Delete</string>
+
+    <string name="shareDataWithIhh"><![CDATA[Press the button below to store this week\'s steps data from the table above in iHeartHealth\'s database - this will allow you to view graphs of your step count on the track & monitor page]]></string>
 </resources>
