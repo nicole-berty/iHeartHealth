@@ -1,10 +1,12 @@
 package ie.ul.ihearthealth;
 
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -56,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        Context context = this;
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                "SharedPrefs", Context.MODE_PRIVATE);
+        if(sharedPref.getInt("nightMode", 0) == 1) {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
+        }
         try {
             ChatSDK.ui().stop();
         } catch (NullPointerException ignored) {
@@ -145,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         MenuItem chatItem = navigationView.getMenu().findItem(R.id.nav_chat);
-        Context context = this;
         chatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

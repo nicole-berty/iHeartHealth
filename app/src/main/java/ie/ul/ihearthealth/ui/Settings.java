@@ -301,8 +301,10 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                         Log.d("TAG", document.getId() + " => " + document.getData());
                         result.append(document.getId()).append(" ").append(document.getData()).append("\n");
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            DocumentReference docRef2 = db.collection("inputData").document(userEmail).collection(collection).document(document.getId());
-                            docRef2.delete().addOnSuccessListener(aVoid -> Snackbar.make(getView(), "Deleted!", Snackbar.LENGTH_LONG).show());
+                            DocumentReference docRef2 = db.collection("inputData").document(userEmail)
+                                    .collection(collection).document(document.getId());
+                            docRef2.delete().addOnSuccessListener(aVoid -> Snackbar.make(getView(), "Deleted!",
+                                    Snackbar.LENGTH_LONG).show());
                         }
                     }
                 } else {
