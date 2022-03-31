@@ -22,5 +22,4 @@
             android:icon="@drawable/outline_question_answer_24"
             android:title="Healthcare Communication" />
     </group>
-
 </menu>

@@ -18,12 +18,12 @@ import ie.ul.ihearthealth.model.MyModel;
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<MyModel> mStoreMyModelArrayList;
+    private ArrayList<MyModel> myModelArrayList;
     private int textSize;
 
     public MyAdapter(Activity activity, ArrayList<MyModel> storeMyModelArrayList) {
         this.mContext = activity;
-        this.mStoreMyModelArrayList = storeMyModelArrayList;
+        this.myModelArrayList = storeMyModelArrayList;
 
     }
 
@@ -36,8 +36,8 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final MyModel item = getValueAt(position);
-        MyViewHolder myViewHolder = (MyViewHolder)holder;
+        MyModel item = getValueAt(position);
+        MyViewHolder myViewHolder = (MyViewHolder) holder;
         if (item != null) {
             setupValuesInWidgets(myViewHolder, item);
         }
@@ -50,12 +50,12 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private MyModel getValueAt(int position) {
-        return mStoreMyModelArrayList.get(position);
+        return myModelArrayList.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mStoreMyModelArrayList.size();
+        return myModelArrayList.size();
     }
 
     private void setupValuesInWidgets(MyViewHolder itemHolder, MyModel
@@ -72,8 +72,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public MyViewHolder(View itemView) {
             super(itemView);
-
-            title=itemView.findViewById(R.id.title);
+            title = itemView.findViewById(R.id.title);
 
         }
     }

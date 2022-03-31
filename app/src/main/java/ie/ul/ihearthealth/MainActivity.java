@@ -156,13 +156,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        MenuItem logOutItem = navigationView.getMenu().findItem(R.id.logOut);
-        logOutItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                logout();
-                return true;
-            }
+        navigationView.getMenu().findItem(R.id.logOut).setOnMenuItemClickListener(menuItem -> {
+            logout();
+            return true;
         });
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
