@@ -8,6 +8,7 @@
         <entry key="..\:/Users/User/StudioProjects/iHeartHealth/app/src/main/res/menu/activity_main_drawer.xml" value="0.15729166666666666" />
         <entry key="..\:/Users/nicol/.gradle/caches/transforms-3/2eab111a8a88da64fe1f13f222c38fd7/transformed/jetified-mod-ui-extras-5.4.2/res/layout/activity_main_drawer.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-hdpi/rounded_textview_red.xml" value="0.2505" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/calendar_selected_bg.xml" value="0.179" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/example_3_selected_bg.xml" value="0.2505" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/example_3_today_bg.xml" value="0.152" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/ic_add.xml" value="0.2495" />
@@ -16,11 +17,13 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/ic_chevron_right.xml" value="0.2495" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/ic_close.xml" value="0.2495" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.193" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/baseline_remove_circle_outline_24.xml" value="0.179" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/circle.xml" value="0.2595" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/circle_red.xml" value="0.2505" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/ic_launcher_background.xml" value="0.193" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/ic_logo_background.xml" value="0.1259259259259259" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/ic_register_background.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/outline_medical_information_24.xml" value="0.172" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/drawable/rounded_textview.xml" value="0.2595" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_calendar.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_chat.xml" value="0.24010416666666667" />
@@ -29,6 +32,7 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_hypertension_info.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_med_notifcation.xml" value="0.2" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_my_marker_view.xml" value="0.11278195488721804" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_notification.xml" value="0.115625" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_reminder.xml" value="0.264" />

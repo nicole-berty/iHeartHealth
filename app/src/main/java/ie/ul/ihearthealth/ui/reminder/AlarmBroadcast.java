@@ -2,7 +2,6 @@ package ie.ul.ihearthealth.ui.reminder;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,13 +9,13 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
+import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.R;
 
@@ -25,21 +24,27 @@ public class AlarmBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        notificationIntent.putExtra("menuFragment", "reminder");
+        Intent notificationIntent = new Intent(context, LoginActivity.class);
+        SharedPreferences sharedPref = context.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("menuFragment", "reminder");
+        editor.apply();
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
 
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        int id = notificationIntent.getIntExtra("id", 0);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Medicine Reminder!")
-                .setContentText("Time to take " + intent.getStringExtra("medicineName"))
+                .setSmallIcon(R.drawable.outline_medication_24)
+                .setContentTitle("Reminder")
+                .setContentText("It's time to take " + intent.getStringExtra("medicineName"))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Time to take " + intent.getStringExtra("medicineName")))
+                        .bigText("It's time to take " + intent.getStringExtra("medicineName")))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound((Uri)intent.getParcelableExtra("Ringtone"))
                 .setContentIntent(pendingIntent)
@@ -55,12 +60,12 @@ public class AlarmBroadcast extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Medicine Dosage Reminder ",
+                    "Medication Reminder ",
                     IMPORTANCE_DEFAULT
             );
             notificationManager.createNotificationChannel(channel);
         }
 
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(id, builder.build());
     }
 }

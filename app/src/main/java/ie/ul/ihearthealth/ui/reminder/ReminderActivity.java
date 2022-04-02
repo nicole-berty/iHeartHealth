@@ -11,6 +11,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -75,6 +76,33 @@ public class ReminderActivity extends AppCompatActivity {
         repeatSwitch = findViewById(R.id.repeatSwitch);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup2);
         dosageSpinner = findViewById(R.id.dosageSpinner);
+
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        String hour_string = currentHour < 10 ? //If hour is lower than 10, add a zero on the left
+                '0' + String.valueOf(currentHour) : String.valueOf(currentHour);
+        String minute_string = currentMinute < 10 ? //If minute is lower than 10, add a zero on the left
+                '0' + String.valueOf(currentMinute) : String.valueOf(currentMinute);
+        time.setText(hour_string + ":" + minute_string);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        month += 1;
+        String monthChoice;
+        String dayChoice;
+        if (month < 10) {
+            monthChoice = "0" + month;
+        } else {
+            monthChoice = String.valueOf(month);
+        }
+        if (day < 10) {
+            dayChoice = "0" + day;
+        } else {
+            dayChoice = String.valueOf(day);
+        }
+        date.setText(year + "-" + monthChoice + "-" + dayChoice);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ReminderActivity.this,
                 R.array.dosage_array, android.R.layout.simple_spinner_item);
@@ -314,8 +342,11 @@ public class ReminderActivity extends AppCompatActivity {
         Intent notificationIntent = new Intent(ReminderActivity.this, AlarmBroadcast.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         notificationIntent.putExtra("medicineName", medName.getText().toString());
-        PendingIntent broadcast = PendingIntent.getBroadcast(ReminderActivity.this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int id = (int) SystemClock.uptimeMillis();
+        notificationIntent.putExtra("id", id);
+        PendingIntent broadcast = PendingIntent.getBroadcast(ReminderActivity.this, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if(repeatAmount != null) {
             if(repeatAmount.getText().toString().equalsIgnoreCase("Twice Daily")) {

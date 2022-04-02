@@ -55,17 +55,14 @@ public class ChatActivity extends AppCompatActivity {
     boolean tryStop () {
         try {
             ChatSDK.ui().stop();
-            System.out.println("HELLLOOOOOOO 5555454");
             return true;
         } catch (NullPointerException ignored) {
-            System.out.println("HELLLOOOOOOO 32322332");
             return false;
         }
     }
 
     void startChat() {
        try {
-            System.out.println("HELLLOOOOOOO 4354533");
             ChatSDK.builder()
                     .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
                     .build()
@@ -106,7 +103,6 @@ public class ChatActivity extends AppCompatActivity {
            editor.apply();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("HELLLOOOOOOO 13233242434");
         }
     }
 }
