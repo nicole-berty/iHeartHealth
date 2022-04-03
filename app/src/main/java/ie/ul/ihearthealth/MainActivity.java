@@ -20,10 +20,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthProvider;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
@@ -37,15 +35,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.util.concurrent.TimeUnit;
-
 import ie.ul.ihearthealth.ui.calendar.CalendarActivity;
 import sdk.chat.core.session.ChatSDK;
-import sdk.chat.firebase.adapter.module.FirebaseModule;
-import sdk.chat.firebase.push.FirebasePushModule;
-import sdk.chat.firebase.ui.FirebaseUIModule;
-import sdk.chat.firebase.upload.FirebaseUploadModule;
-import sdk.chat.ui.module.UIModule;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,54 +49,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Context context = this;
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                "SharedPrefs", Context.MODE_PRIVATE);
+        if(user == null) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+        SharedPreferences sharedPref = this.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putBoolean("loggedOut", false);
+        editor.apply();
+
         if(sharedPref.getInt("nightMode", 0) == 1) {
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
         }
-        try {
-            ChatSDK.ui().stop();
-        } catch (NullPointerException ignored) {
-            try {
-                ChatSDK.builder()
-                        .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
-                        .build()
 
-                        // Add the Firebase network adapter module
-                        .addModule(
-                                FirebaseModule.builder()
-                                        .setFirebaseRootPath("pre_1")
-                                        .setFirebaseDatabaseURL("https://ihearthealth-f64c2-default-rtdb.europe-west1.firebasedatabase.app")
-                                        .setDevelopmentModeEnabled(true)
-                                        .build()
-                        )
-
-                        // Add the UI module
-                        .addModule(UIModule.builder()
-                                .setPublicRoomCreationEnabled(true)
-                                .setPublicRoomsEnabled(true)
-                                .build()
-                        )
-
-                        // Add modules to handle file uploads, push notifications
-                        .addModule(FirebaseUploadModule.shared())
-                        .addModule(FirebasePushModule.shared())
-
-                        // Enable Firebase UI with phone and email auth
-                        .addModule(FirebaseUIModule.builder()
-                                .setProviders(EmailAuthProvider.PROVIDER_ID, PhoneAuthProvider.PROVIDER_ID)
-                                .build()
-                        )
-                        // Activate
-                        .build()
-                        .activate(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        editor.putString("activity", "main");
+        editor.apply();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -158,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
         chatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //do your stuff
-                UIModule.config().setAllowBackPressFromMainActivity(true);
-                ChatSDK.ui().startMainActivity(context);
+                Intent i = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(i);
                 return true;
             }
         });
@@ -178,13 +140,6 @@ public class MainActivity extends AppCompatActivity {
                     123);
         } else {
             Toast.makeText(this, "Granted", Toast.LENGTH_LONG).show();
-        }
-
-        String menuFragment = getIntent().getStringExtra("menuFragment");
-        if (menuFragment != null) {
-            if (menuFragment.equals("reminder")) {
-                navController.navigate(R.id.nav_reminders);
-            }
         }
     }
 

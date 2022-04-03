@@ -15,7 +15,6 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.R;
 
@@ -24,7 +23,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent notificationIntent = new Intent(context, LoginActivity.class);
+        Intent notificationIntent = new Intent(context, MedNotification.class);
         SharedPreferences sharedPref = context.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("menuFragment", "reminder");
@@ -36,7 +35,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
 
-        int id = notificationIntent.getIntExtra("id", 0);
+        int id = sharedPref.getInt("notificationNumber", 0);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -67,5 +66,8 @@ public class AlarmBroadcast extends BroadcastReceiver {
         }
 
         notificationManager.notify(id, builder.build());
+        id = id + 1;
+        editor.putInt("notificationNumber", id);
+        editor.apply();
     }
 }

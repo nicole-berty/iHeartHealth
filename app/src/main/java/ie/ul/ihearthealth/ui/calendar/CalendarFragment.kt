@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -290,8 +291,12 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         super.onStop()
         homeActivityToolbar.setBackgroundColor(requireContext().getColorCompat(R.color.ihh_pink))
         homeActivityToolbar.setTitleTextColor(resources.getColor(R.color.white))
-        val intent = Intent(activity, MainActivity::class.java)
-        startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        val sharedPref = activity?.getSharedPreferences("SharedPrefs", AppCompatActivity.MODE_PRIVATE)
+        val menuFragment: String = sharedPref?.getString("menuFragment", "").toString()
+        if (menuFragment == "") {
+                val i = Intent(activity, MainActivity::class.java)
+                startActivity(i)
+        }
         activity?.finish()
     }
 

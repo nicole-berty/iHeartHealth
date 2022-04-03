@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -103,8 +104,12 @@ public class LoginFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(mContext, gso);
         //If the user is not null, i.e. is logged in
         if(user != null) {
-            moveToHomeActivity();
-            ((Activity) getActivity()).overridePendingTransition(0, 0);
+            SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                    "SharedPrefs", Context.MODE_PRIVATE);
+            if(sharedPref.getBoolean("loggedOut", false)) {
+                moveToHomeActivity();
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
+            }
         } else {
             System.out.println("user is null");
         }

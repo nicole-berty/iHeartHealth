@@ -16,6 +16,11 @@ class CalendarActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.homeToolbar)
 
+        val sharedPref = getSharedPreferences("SharedPrefs", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("activity", "calendar")
+        editor.apply()
+
         supportFragmentManager.beginTransaction()
             .add(R.id.homeContainer, CalendarFragment(), CalendarFragment().javaClass.simpleName)
             .addToBackStack(CalendarFragment().javaClass.simpleName)

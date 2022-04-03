@@ -8,10 +8,11 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.R;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -76,6 +78,12 @@ public class ReminderActivity extends AppCompatActivity {
         repeatSwitch = findViewById(R.id.repeatSwitch);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup2);
         dosageSpinner = findViewById(R.id.dosageSpinner);
+
+        SharedPreferences sharedPref = this.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("activity", "reminder");
+        editor.apply();
 
         Calendar calendar = Calendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -344,10 +352,15 @@ public class ReminderActivity extends AppCompatActivity {
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         notificationIntent.putExtra("medicineName", medName.getText().toString());
-        int id = (int) SystemClock.uptimeMillis();
-        notificationIntent.putExtra("id", id);
-        PendingIntent broadcast = PendingIntent.getBroadcast(ReminderActivity.this, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        SharedPreferences prefs = this.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        int requestCode = prefs.getInt("notificationRequestCode", 0);
+        notificationIntent.putExtra("id", requestCode);
 
+        PendingIntent broadcast = PendingIntent.getBroadcast(ReminderActivity.this, requestCode, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        requestCode = requestCode + 1;
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("notificationRequestCode", requestCode);
+        editor.apply();
         if(repeatAmount != null) {
             if(repeatAmount.getText().toString().equalsIgnoreCase("Twice Daily")) {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, broadcast);
@@ -364,7 +377,16 @@ public class ReminderActivity extends AppCompatActivity {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
         }
         Log.d("TAG", calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SharedPreferences prefs = getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        if(prefs.getBoolean("fromNotification", false)) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 }
