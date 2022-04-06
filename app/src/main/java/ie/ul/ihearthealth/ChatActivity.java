@@ -56,7 +56,8 @@ public class ChatActivity extends AppCompatActivity {
         try {
             ChatSDK.ui().stop();
             return true;
-        } catch (NullPointerException ignored) {
+        } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -95,8 +96,7 @@ public class ChatActivity extends AppCompatActivity {
                     // Activate
                     .build()
                     .activate(this);
-            UIModule.config().setAllowBackPressFromMainActivity(true);
-
+           UIModule.config().setAllowBackPressFromMainActivity(true);
            SharedPreferences sharedPref = this.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
            SharedPreferences.Editor editor = sharedPref.edit();
            editor.putBoolean("chatOpenBefore", true);
