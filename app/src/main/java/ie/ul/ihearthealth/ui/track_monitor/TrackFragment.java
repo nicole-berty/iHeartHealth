@@ -61,23 +61,17 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
         RadioButton nav_monitor = view.findViewById(R.id.nav_monitor_button);
         RadioButton nav_track = view.findViewById(R.id.nav_track_button);
-        nav_monitor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getActivity()
-                        .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new MonitorFragment());
-                fragmentTransaction.commit();
-            }
+        nav_monitor.setOnClickListener(v -> {
+            FragmentTransaction fragmentTransaction = getActivity()
+                    .getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new MonitorFragment());
+            fragmentTransaction.commit();
         });
-        nav_track.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getActivity()
-                        .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new TrackFragment());
-                fragmentTransaction.commit();
-            }
+        nav_track.setOnClickListener(v -> {
+            FragmentTransaction fragmentTransaction = getActivity()
+                    .getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new TrackFragment());
+            fragmentTransaction.commit();
         });
 
         EditText measurement = view.findViewById(R.id.measurement);
@@ -123,10 +117,10 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         Button submit = view.findViewById(R.id.submit);
 
         NumberPicker systolicValue = (NumberPicker) view.findViewById(R.id.systolicValue);
-        systolicValue.setMinValue(0);
+        systolicValue.setMinValue(40);
         systolicValue.setMaxValue(250);
         NumberPicker diastolicValue = (NumberPicker) view.findViewById(R.id.diastolicVal);
-        diastolicValue.setMinValue(0);
+        diastolicValue.setMinValue(40);
         diastolicValue.setMaxValue(250);
 
         TextView bp_slash = view.findViewById(R.id.bp_forward_slash);
@@ -206,7 +200,8 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                submit.setEnabled(measurement.getText().toString().length() > 0);
+                    submit.setEnabled(
+                            isNumeric(measurement.getText().toString()));
             }
 
             @Override
@@ -264,6 +259,10 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                         Toast.makeText(getContext(), "Sorry, that didn't work. Please try inputting the measurement again.", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    public boolean isNumeric(String str) {
+        return str.matches("\\d+(\\.\\d+)?");
     }
 
     @Override
