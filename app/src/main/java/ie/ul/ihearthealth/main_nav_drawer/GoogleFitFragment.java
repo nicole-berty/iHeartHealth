@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth;
+package ie.ul.ihearthealth.main_nav_drawer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import ie.ul.ihearthealth.R;
 
 public class GoogleFitFragment extends Fragment {
     private Context mContext;

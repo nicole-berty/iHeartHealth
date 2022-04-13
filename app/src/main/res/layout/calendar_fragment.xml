@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
-    tools:context="ie.ul.ihearthealth.ui.calendar.CalendarFragment">
+    tools:context="ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

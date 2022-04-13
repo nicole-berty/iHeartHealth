@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.calendar;
+package ie.ul.ihearthealth.main_nav_drawer.calendar;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

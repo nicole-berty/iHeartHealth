@@ -35,7 +35,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import ie.ul.ihearthealth.ui.calendar.CalendarActivity;
+import ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarActivity;
 import sdk.chat.core.session.ChatSDK;
 
 public class MainActivity extends AppCompatActivity {

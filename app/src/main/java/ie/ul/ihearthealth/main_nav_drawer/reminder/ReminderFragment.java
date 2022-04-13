@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.reminder;
+package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
 import android.content.Context;
 import android.content.Intent;

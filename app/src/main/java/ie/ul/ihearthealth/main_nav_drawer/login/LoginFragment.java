@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.login;
+package ie.ul.ihearthealth.main_nav_drawer.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;

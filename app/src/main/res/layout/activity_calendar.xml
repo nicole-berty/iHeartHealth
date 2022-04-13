@@ -5,7 +5,7 @@
     android:id="@+id/homeRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ie.ul.ihearthealth.ui.calendar.CalendarActivity">
+    tools:context="ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

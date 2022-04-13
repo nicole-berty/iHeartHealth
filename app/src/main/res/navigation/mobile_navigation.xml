@@ -7,34 +7,34 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="ie.ul.ihearthealth.ui.home.HomeFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_measurements"
-        android:name="ie.ul.ihearthealth.ui.track_monitor.TrackFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.track_monitor.TrackFragment"
         android:label="Add Measurements"
         tools:layout="@layout/fragment_track" />
 
     <fragment
         android:id="@+id/nav_reminders"
-        android:name="ie.ul.ihearthealth.ui.reminder.ReminderFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.reminder.ReminderFragment"
         android:label="Reminders"
         tools:layout="@layout/fragment_reminder" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="ie.ul.ihearthealth.ui.login.LoginFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/nav_settings"
-        android:name="ie.ul.ihearthealth.ui.Settings"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.Settings"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/nav_google_fit"
-        android:name="ie.ul.ihearthealth.GoogleFitFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.GoogleFitFragment"
         android:label="Google Fit Integration"
         tools:layout="@layout/fragment_google_fit" />
 

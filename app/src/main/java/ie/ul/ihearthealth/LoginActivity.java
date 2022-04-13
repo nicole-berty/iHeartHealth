@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import ie.ul.ihearthealth.ui.login.LoginFragment;
+import ie.ul.ihearthealth.main_nav_drawer.login.LoginFragment;
 
 public class LoginActivity extends AppCompatActivity {
 

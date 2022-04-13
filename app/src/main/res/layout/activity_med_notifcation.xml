@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.reminder.MedNotification">
+    tools:context=".main_nav_drawer.reminder.MedNotification">
 
     <Button
         android:id="@+id/button2"

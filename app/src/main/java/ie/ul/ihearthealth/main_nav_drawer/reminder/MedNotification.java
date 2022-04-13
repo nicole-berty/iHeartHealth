@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.reminder;
+package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +16,7 @@ import ie.ul.ihearthealth.HypertensionInfo;
 import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.MainActivity;
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.ui.calendar.CalendarActivity;
+import ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarActivity;
 
 public class MedNotification extends AppCompatActivity {
 

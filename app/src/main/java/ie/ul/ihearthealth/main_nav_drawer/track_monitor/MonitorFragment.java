@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.track_monitor;
+package ie.ul.ihearthealth.main_nav_drawer.track_monitor;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.IMarker;
@@ -38,7 +37,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.core.utilities.Tree;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -49,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;

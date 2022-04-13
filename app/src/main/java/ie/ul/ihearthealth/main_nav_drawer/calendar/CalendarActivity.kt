@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.calendar
+package ie.ul.ihearthealth.main_nav_drawer.calendar
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.home;
+package ie.ul.ihearthealth.main_nav_drawer.home;
 
 import android.content.Context;
 import android.os.Build;

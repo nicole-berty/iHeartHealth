@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.ui.reminder;
+package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 

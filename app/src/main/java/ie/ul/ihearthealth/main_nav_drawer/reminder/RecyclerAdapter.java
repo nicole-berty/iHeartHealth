@@ -1,10 +1,9 @@
-package ie.ul.ihearthealth.ui.reminder;
+package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

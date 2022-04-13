@@ -19,14 +19,14 @@
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.reminder.MedNotification"
+            android:name=".main_nav_drawer.reminder.MedNotification"
             android:exported="false" />
         <activity
-            android:name=".ui.reminder.ReminderActivity"
+            android:name=".main_nav_drawer.reminder.ReminderActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.calendar.CalendarActivity"
+            android:name=".main_nav_drawer.calendar.CalendarActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:theme="@style/Theme.IHeartHealth.NoActionBar" />
@@ -76,7 +76,7 @@
         </activity>
 
         <receiver
-            android:name=".ui.reminder.AlarmBroadcast"
+            android:name=".main_nav_drawer.reminder.AlarmBroadcast"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
