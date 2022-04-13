@@ -181,7 +181,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                btn_change_pass.setEnabled(pass.toString().length() > 6 && pass.getText().toString().equals(repeatPass.getText().toString()));
+                btn_change_pass.setEnabled(pass.getText().toString().length() > 5 && pass.getText().toString().equals(repeatPass.getText().toString()));
             }
 
             @Override
@@ -198,7 +198,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                btn_change_pass.setEnabled(repeatPass.toString().length() > 6 && repeatPass.getText().toString().equals(pass.getText().toString()));
+                btn_change_pass.setEnabled(repeatPass.getText().toString().length() > 5 && repeatPass.getText().toString().equals(pass.getText().toString()));
             }
 
             @Override
@@ -380,15 +380,15 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                         Log.d("TAG", "User re-authenticated.");
                         if(task.isSuccessful()){
                             if(change.equals("pass")) {
-                                user.updatePassword(pass.getText().toString())
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_LONG).show();
+                                    user.updatePassword(pass.getText().toString())
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_LONG).show();
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
                             } else if(change.equals("delete")) {
                                 deleteUserData();
                             } else {

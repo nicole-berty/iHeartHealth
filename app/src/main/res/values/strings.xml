@@ -10,7 +10,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="invalid_email">Not a valid email</string>
-    <string name="invalid_password">Password must be >= 8 characters</string>
+    <string name="invalid_password">Password must be >= 6 characters</string>
 
     <string name="facebook_app_id">325552782771702</string>
     <string name="fb_login_protocol_scheme">fb325552782771702</string>
