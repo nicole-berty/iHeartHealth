@@ -58,6 +58,8 @@ public class ReminderActivity extends AppCompatActivity {
     Spinner dosageSpinner;
     RadioButton repeatAmount;
     Button submit;
+    String currentDateTimeStr;
+    String dataString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,10 +285,10 @@ public class ReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Date currentDateTime = Calendar.getInstance().getTime();
-                String currentDateTimeStr = currentDateTime.toString().replace("GMT ", "");
+                currentDateTimeStr = currentDateTime.toString().replace("GMT ", "");
                 currentDateTimeStr = currentDateTimeStr.replace(" ", "-");
                 Map<String, String> data = new HashMap<>();
-                String dataString = "Medicine Name: " + medName.getText().toString() + ";Medicine Dosage: " + medDosage.getText().toString()
+                dataString = "Medicine Name: " + medName.getText().toString() + ";Medicine Dosage: " + medDosage.getText().toString()
                         + " " + dosageSpinner.getSelectedItem().toString() + ";Medicine Description: " + medDesc.getText().toString() + ";Time: "
                         + time.getText() + ";Start Date: " + date.getText();
                 if(repeatSwitch.isChecked()) {
@@ -304,6 +306,7 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     void writeToDatabase(Map data) {
+        Context context = this;
         db.collection("reminders").document(user.getEmail())
                 .set(data, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -312,6 +315,10 @@ public class ReminderActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot successfully written!");
                         Toast.makeText(ReminderActivity.this, "Reminder added successfully!", Toast.LENGTH_LONG).show();
                         setNotification();
+                        SharedPreferences prefs = context.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+                        int id = prefs.getInt("notificationNumber", 0);
+                        dataString = dataString + ";Id:" + id;
+                        updateReminder();
                         finish();
                     }
                 })
@@ -327,12 +334,22 @@ public class ReminderActivity extends AppCompatActivity {
     void setSubmitStatus() {
         if(repeatSwitch.isChecked()) {
             int selectedId = radioGroup.getCheckedRadioButtonId();
-            submit.setEnabled(medDosage.getText().toString().length() > 0 && medName.getText().toString().length() > 0 &&
+            submit.setEnabled(isNumeric(medDosage.getText().toString()) && medName.getText().toString().length() > 0 &&
                     time.getText().toString().length() > 0 && date.getText().toString().length() > 0 && selectedId != -1);
         } else {
-            submit.setEnabled(medDosage.getText().toString().length() > 0 && medName.getText().toString().length() > 0 &&
+            submit.setEnabled(isNumeric(medDosage.getText().toString()) && medName.getText().toString().length() > 0 &&
                     time.getText().toString().length() > 0 && date.getText().toString().length() > 0);
         }
+    }
+
+    private boolean isNumeric(String str) {
+        return str.matches("\\d+(\\.\\d+)?");
+    }
+
+    private void updateReminder() {
+        db.collection("reminders")
+                .document(user.getEmail())
+                .update(currentDateTimeStr, dataString);
     }
 
     private void setNotification() {
@@ -355,27 +372,29 @@ public class ReminderActivity extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
         int requestCode = prefs.getInt("notificationRequestCode", 0);
         notificationIntent.putExtra("id", requestCode);
-
+        dataString = dataString + ";RequestCode:" + requestCode;
         PendingIntent broadcast = PendingIntent.getBroadcast(ReminderActivity.this, requestCode, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         requestCode = requestCode + 1;
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("notificationRequestCode", requestCode);
         editor.apply();
+        long uniqueId = calendar.getTimeInMillis();
         if(repeatAmount != null) {
             if(repeatAmount.getText().toString().equalsIgnoreCase("Twice Daily")) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, broadcast);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, uniqueId, AlarmManager.INTERVAL_HALF_DAY, broadcast);
             } else if(repeatAmount.getText().toString().equalsIgnoreCase("Daily")) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, uniqueId, AlarmManager.INTERVAL_DAY, broadcast);
             } else if(repeatAmount.getText().toString().equalsIgnoreCase("Every Second Day")) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY * 2, broadcast);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, uniqueId,  AlarmManager.INTERVAL_DAY * 2, broadcast);
             } else if(repeatAmount.getText().toString().equalsIgnoreCase("Weekly")) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY * 7, broadcast);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, uniqueId,  AlarmManager.INTERVAL_DAY * 7, broadcast);
             } else if(repeatAmount.getText().toString().equalsIgnoreCase("Monthly")) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY * 28L, broadcast);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, uniqueId,  AlarmManager.INTERVAL_DAY * 28L, broadcast);
             }
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, uniqueId, broadcast);
         }
+        dataString = dataString + ";RepeatID:" + uniqueId;
         Log.d("TAG", calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
     }
 

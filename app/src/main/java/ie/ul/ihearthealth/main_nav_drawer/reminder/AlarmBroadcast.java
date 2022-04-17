@@ -68,6 +68,6 @@ public class AlarmBroadcast extends BroadcastReceiver {
         notificationManager.notify(id, builder.build());
         id = id + 1;
         editor.putInt("notificationNumber", id);
-        editor.apply();
+        editor.commit();
     }
 }

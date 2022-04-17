@@ -1,6 +1,10 @@
 package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +32,12 @@ import ie.ul.ihearthealth.R;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private List<Medicine> medicines;
+    private List<MedicineReminder> medicines;
     private Context context;
     private FirebaseFirestore db;
     private FirebaseUser user;
 
-    RecyclerAdapter(List<Medicine> medicines, Context context) {
+    RecyclerAdapter(List<MedicineReminder> medicines, Context context) {
         this.medicines = medicines;
         this.context = context;
     }
@@ -51,7 +55,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Medicine medicine = medicines.get(position);
+        MedicineReminder medicine = medicines.get(position);
 
         holder.medName.setText(medicine.getMedName());
         holder.medDose.setText(medicine.getMedDosage());
@@ -75,6 +79,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         Toast.makeText(context, holder.medName.getText().toString() + " deleted", Toast.LENGTH_LONG).show();
                     }
                 });
+
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent notificationIntent = new Intent(context, AlarmBroadcast.class);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        context, medicine.getRequestCode(), notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.cancel(pendingIntent);
             }
         });
     }
