@@ -138,8 +138,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
                     123);
-        } else {
-            Toast.makeText(this, "Granted", Toast.LENGTH_LONG).show();
         }
     }
 

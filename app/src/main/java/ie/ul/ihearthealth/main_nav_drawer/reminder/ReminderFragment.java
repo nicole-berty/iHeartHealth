@@ -2,6 +2,7 @@ package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ public class ReminderFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView tv;
     private RecyclerView.Adapter adapter;
-    private List<Medicine> medicines;
+    private List<MedicineReminder> medicines;
 
     private Context mContext;
 
@@ -75,30 +76,41 @@ public class ReminderFragment extends Fragment {
             }
         });
 
-        medicines = new ArrayList<Medicine>();
+        medicines = new ArrayList<MedicineReminder>();
         recyclerView = view.findViewById(R.id.recycler_view_medicine);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         adapter = new RecyclerAdapter(new ArrayList<>(), mContext);
         recyclerView.setAdapter(adapter);
         readFromDatabase();
+
+        SharedPreferences sharedPref = mContext.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("activity", "main");
+        editor.commit();
     }
 
-    public void loadMedicines(List<Medicine> data) {
+    public void loadMedicines(List<MedicineReminder> data) {
         medicines = data;
         recyclerView.setAdapter(new RecyclerAdapter(medicines, mContext));
         recyclerView.invalidate();
     }
 
-    public List<Medicine> getMedicineList(String[] data) {
-        List<Medicine> medicineList = new ArrayList<>();
+    public List<MedicineReminder> getMedicineList(String[] data) {
+        List<MedicineReminder> medicineList = new ArrayList<>();
 
         for(String s : data) {
             String[] splitReminder = s.split("=");
             if(splitReminder.length > 1) {
                 String[] details = splitReminder[1].split(";");
                 details[0] = details[0].replace("Medicine Name: ", "");
-                Medicine medicine = new Medicine(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5]);
+                MedicineReminder medicine;
+                if(details.length > 6) {
+                    medicine = new MedicineReminder(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5], details[6]);
+                } else {
+                    medicine = new MedicineReminder(splitReminder[0].replace(" ", ""), details[0], details[1], details[2], details[3], details[4], details[5], "");
+                }
                 medicineList.add(medicine);
             }
         }
@@ -123,7 +135,7 @@ public class ReminderFragment extends Fragment {
                     String allReminders = snapshot.getData().toString().replace("{", "");
                     allReminders = allReminders.replace("}", "");
                     String[] splitReminders = allReminders.split(",");
-                    List<Medicine> medicines = getMedicineList(splitReminders);
+                    List<MedicineReminder> medicines = getMedicineList(splitReminders);
                     if(medicines.size() > 0) {
                         recyclerView.setVisibility(View.VISIBLE);
                         tv.setVisibility(View.INVISIBLE);

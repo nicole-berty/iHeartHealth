@@ -40,7 +40,7 @@ import java.util.Map;
 
 import ie.ul.ihearthealth.R;
 
-public class TrackFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class MeasureFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -48,7 +48,7 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_track, container, false);
+        View root = inflater.inflate(R.layout.fragment_measure, container, false);
         container.removeAllViews();
         return root;
     }
@@ -70,7 +70,7 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
         nav_track.setOnClickListener(v -> {
             FragmentTransaction fragmentTransaction = getActivity()
                     .getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new TrackFragment());
+            fragmentTransaction.replace(((ViewGroup)(getView().getParent())).getId(), new MeasureFragment());
             fragmentTransaction.commit();
         });
 
@@ -139,11 +139,11 @@ public class TrackFragment extends Fragment implements AdapterView.OnItemSelecte
                 submit.setEnabled(false);
                 measurement.setHint("Value");
                 switch (spinnerValue) {
-                    case "Sodium":
+                    case "Sodium Intake":
                         unitSpinner.setAdapter(sodiumAdapter);
                         infoTv.setText(R.string.sodium_info);
                         break;
-                    case "Calories":
+                    case "Caloric Intake":
                         unitSpinner.setAdapter(caloriesAdapter);
                         infoTv.setText(R.string.calories_info);
                         break;

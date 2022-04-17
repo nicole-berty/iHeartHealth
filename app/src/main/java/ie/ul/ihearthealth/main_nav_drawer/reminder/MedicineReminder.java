@@ -1,6 +1,6 @@
 package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
-public class Medicine {
+public class MedicineReminder {
 
     private String id;
     private String medName;
@@ -9,8 +9,9 @@ public class Medicine {
     private String medTime;
     private String startDate;
     private String repeat;
+    private int requestCode;
 
-    public Medicine(String id, String medName, String medDosage, String medDesc, String medTime, String startDate, String repeat) {
+    public MedicineReminder(String id, String medName, String medDosage, String medDesc, String medTime, String startDate, String repeat, String requestCode) {
         this.id = id;
         this.medName = medName;
         this.medDosage = medDosage;
@@ -18,6 +19,8 @@ public class Medicine {
         this.medTime = medTime;
         this.startDate = startDate;
         this.repeat = repeat;
+        requestCode = requestCode.replace("RequestCode:", "");
+        if(!requestCode.equals("")) this.requestCode = Integer.parseInt(requestCode);
     }
 
     public String getId() {
@@ -46,5 +49,9 @@ public class Medicine {
 
     public String getStartDate() {
         return startDate;
+    }
+
+    public int getRequestCode() {
+        return requestCode;
     }
 }

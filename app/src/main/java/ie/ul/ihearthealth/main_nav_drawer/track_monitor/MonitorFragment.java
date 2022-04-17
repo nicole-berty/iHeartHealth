@@ -113,7 +113,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(((ViewGroup) (getView().getParent())).getId(), new TrackFragment());
+                fragmentTransaction.replace(((ViewGroup) (getView().getParent())).getId(), new MeasureFragment());
                 fragmentTransaction.commit();
             }
         });
@@ -139,12 +139,15 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
 
         yearSpinner = (Spinner) view.findViewById(R.id.yearSpinner);
 
+        // Create an arraylist of years - these will be the years a graph can be seen for
         years = new ArrayList<>();
+        // Add the current year, the previous two years and one year ahead
         addToYears(0);
         addToYears(-1);
         addToYears(-2);
         addToYears(1);
         Collections.sort(years);
+
         ArrayAdapter<Integer> adapter3 = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, years);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(adapter3);
@@ -215,12 +218,18 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         });
     }
 
+    /*
+    Use the Calendar add method to extraNum years to the current years. Extra num can be a negative.
+     */
     void addToYears(int extraNum) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, extraNum);
         years.add(cal.get(Calendar.YEAR));
     }
 
+    /*
+    Get the units for the currently selected data item
+     */
     static String getUnits() {
         switch (dataSpinner.getSelectedItem().toString()) {
             case "Sodium":
@@ -244,11 +253,18 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         }
     }
 
+    /*
+    Get the details for the currently selected data point on the graph
+     */
     static String getPointDetails(int day, float value) {
         String details = "Date: " + day + " " + monthSpinner.getSelectedItem().toString() + " " + yearSpinner.getSelectedItem().toString() + "\n Value: " + value + " ";
         details += getUnits();
         return details;
     }
+
+    /*
+    Create a grouped line chart using the MPAndroidChart library methods
+     */
     @SuppressLint("NewApi")
     public void groupLineChart(View view, Map<LocalDate, String> graphData, Map<LocalDate, String> graphData2, int month, int year, int chartID){
         chart = view.findViewById(chartID);
@@ -395,7 +411,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
             averageDayVal.setText("Average daily intake: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
         }
         switch (dataSpinner.getSelectedItem().toString()) {
-            case "Sodium":
+            case "Sodium Intake":
                 if(dailyAverage < 2500) {
                     averageDayVal.append("\n\nYour sodium intake is ideal - it is below the maximum recommended amount of 2500 milligrams a day. Keep up the good work!");
                 } else {
@@ -404,7 +420,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
                             " opting for low or no sodium items when eating, cutting back on processed and smoked foods, and using herbs and spices to add flavour to food.");
                 }
                 break;
-            case "Calories":
+            case "Caloric Intake":
                 if(dailyAverage < 2500) {
                     averageDayVal.append("\n\nYour caloric intake seems to be good - though it's important to remember that how many calories you need depends on your exercise levels, age, and sex." +
                             " In general, your caloric intake should be equal to your energy expenditure. ");

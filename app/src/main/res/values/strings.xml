@@ -34,8 +34,8 @@
     <string name="source_who"><b>Source: </b>World Health Organisation</string>
 
     <string-array name="measurements_array">
-        <item>Sodium</item>
-        <item>Calories</item>
+        <item>Sodium Intake</item>
+        <item>Caloric Intake</item>
         <item>Exercise</item>
         <item>Blood Pressure</item>
         <item>Alcohol Intake</item>
@@ -43,8 +43,8 @@
     </string-array>
 
     <string-array name="graph_array">
-        <item>Sodium</item>
-        <item>Calories</item>
+        <item>Sodium Intake</item>
+        <item>Caloric Intake</item>
         <item>Exercise - Steps</item>
         <item>Exercise - Minutes</item>
         <item>Exercise - Hours</item>

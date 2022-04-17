@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/nav_measurements"
-        android:name="ie.ul.ihearthealth.main_nav_drawer.track_monitor.TrackFragment"
+        android:name="ie.ul.ihearthealth.main_nav_drawer.track_monitor.MeasureFragment"
         android:label="Add Measurements"
-        tools:layout="@layout/fragment_track" />
+        tools:layout="@layout/fragment_measure" />
 
     <fragment
         android:id="@+id/nav_reminders"
