@@ -59,4 +59,5 @@ public class AlertDialogFragment extends DialogFragment {
                 });
         return builder.create();
     }
+
 }

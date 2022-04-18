@@ -196,18 +196,8 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<AuthUI.IdpConfig> providers = Arrays.asList(
-                        new AuthUI.IdpConfig.EmailBuilder().setRequireName(false).build()
-                );
-
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder().setIsSmartLockEnabled(false)
-                                .setAvailableProviders(providers)
-
-                                .setTheme(R.style.Theme_IHeartHealth)
-                                .build(), RC_SIGN_IN
-                );
+                Intent i = new Intent(mContext, RegisterActivity.class);
+                startActivity(i);
             }
         });
 

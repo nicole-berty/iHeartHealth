@@ -331,6 +331,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                                 Intent intent = new Intent(getContext(), LoginActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 startActivity(intent);
+                                                getActivity().finish();
                                             }
                                         }
                                     });
@@ -410,7 +411,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                                     }
                                                     catch (FirebaseAuthUserCollisionException existEmail)
                                                     {
-                                                        Toast.makeText(getContext(), "That email is registered to another account", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), "The provided email address is registered to another account", Toast.LENGTH_LONG).show();
                                                     }
                                                     catch (Exception e)
                                                     {
