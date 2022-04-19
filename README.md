@@ -2,9 +2,9 @@
 
 **Nicole Berty - 18246702**
 
-*The signed release apk is located in \<projectLocation>\iHeartHealth\app\release - you will need to enable installing apps from external sources / installing unknown apps (depending on the model) in your phone or emulator's settings to be able to install the app this way.*
+*The signed release apk is located in \<projectLocation>\iHeartHealth\app\release - you will need download this apk on the device and enable installing apps from external sources / installing unknown apps (depending on the model) in your phone or emulator's settings to be able to install the app this way.*
 
-*The signed debug apk is located in \<projectLocation>\iHeartHealth\app\debug while the unsigned debug apk is located in \<projectLocation>\iHeartHealth\app\build\outputs\apk\debug*
+*The unsigned debug apk is located in \<projectLocation>\iHeartHealth\app\build\outputs\apk\debug*
 
 iHeartHealth is an Android application that enables users to learn about hypertension and supports them in managing this condition.
 
