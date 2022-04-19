@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IHeartHealth">
         <activity
-            android:name=".main_nav_drawer.login.RegisterActivity"
+            android:name=".login.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.IHeartHealth.NoActionBar" />
         <activity

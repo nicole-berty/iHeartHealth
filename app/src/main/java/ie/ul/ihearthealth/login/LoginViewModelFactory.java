@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.main_nav_drawer.login;
+package ie.ul.ihearthealth.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;

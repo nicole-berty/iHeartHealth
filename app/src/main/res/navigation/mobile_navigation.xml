@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_reminder" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="ie.ul.ihearthealth.main_nav_drawer.login.LoginFragment"
+        android:name="ie.ul.ihearthealth.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
     <fragment

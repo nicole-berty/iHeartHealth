@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import ie.ul.ihearthealth.main_nav_drawer.login.LoginFragment;
+import ie.ul.ihearthealth.login.LoginFragment;
 
 /**
  * The launcher activity for the app which starts when the app first opens

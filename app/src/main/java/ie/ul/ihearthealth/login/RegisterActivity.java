@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.main_nav_drawer.login;
+package ie.ul.ihearthealth.login;
 
 import static android.content.ContentValues.TAG;
 
@@ -46,13 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         register = findViewById(R.id.newUserRegisterBtn);
 
         // Set on Click Listener on Registration button
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                registerNewUser();
-            }
-        });
+        register.setOnClickListener(v -> registerNewUser());
     }
 
     private boolean isEmailValid(String email) {
@@ -96,49 +90,44 @@ public class RegisterActivity extends AppCompatActivity {
         // create new user or register new user
         mAuth
                 .createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(),
+                                "Registration successful!",
+                                Toast.LENGTH_LONG)
+                                .show();
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(),
-                                    "Registration successful!",
+                        // if the user created intent to login activity
+                        Intent intent
+                                = new Intent(RegisterActivity.this,
+                                HomeActivity.class);
+                        finishAffinity();
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        try
+                        {
+                            throw task.getException();
+                        }
+                        catch (FirebaseAuthInvalidCredentialsException malformedEmail)
+                        {
+                            Toast.makeText(RegisterActivity.this, "Incorrect email format", Toast.LENGTH_LONG).show();
+                        }
+                        catch (FirebaseAuthUserCollisionException existEmail)
+                        {
+                            Toast.makeText(RegisterActivity.this, "The provided email address is registered to another account", Toast.LENGTH_LONG).show();
+                        }
+                        catch (Exception e)
+                        {
+                            Log.d(TAG, "Exception: " + e.getMessage());
+                            // Registration failed
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Registration failed!"
+                                            + " Please try again",
                                     Toast.LENGTH_LONG)
                                     .show();
-
-                            // if the user created intent to login activity
-                            Intent intent
-                                    = new Intent(RegisterActivity.this,
-                                    HomeActivity.class);
-                            finishAffinity();
-                            startActivity(intent);
-                            finish();
-                        }
-                        else {
-                            try
-                            {
-                                throw task.getException();
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException malformedEmail)
-                            {
-                                Toast.makeText(RegisterActivity.this, "Incorrect email format", Toast.LENGTH_LONG).show();
-                            }
-                            catch (FirebaseAuthUserCollisionException existEmail)
-                            {
-                                Toast.makeText(RegisterActivity.this, "The provided email address is registered to another account", Toast.LENGTH_LONG).show();
-                            }
-                            catch (Exception e)
-                            {
-                                Log.d(TAG, "Exception: " + e.getMessage());
-                                // Registration failed
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "Registration failed!"
-                                                + " Please try again",
-                                        Toast.LENGTH_LONG)
-                                        .show();
-                            }
                         }
                     }
                 });
