@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
         mGoogleApiClient.connect();
         AppEventsLogger.activateApp(getApplication());
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -99,35 +99,26 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         MenuItem calendar = navigationView.getMenu().findItem(R.id.nav_calendar);
-        calendar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                //do your stuff
-                Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
-                startActivity(intent);
-                return true;
-            }
+        calendar.setOnMenuItemClickListener(item -> {
+            //do your stuff
+            Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+            startActivity(intent);
+            return true;
         });
 
         MenuItem infoItem = navigationView.getMenu().findItem(R.id.nav_info);
-        infoItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                //do your stuff
-                Intent intent = new Intent(getApplicationContext(), HypertensionInfo.class);
-                startActivity(intent);
-                return true;
-            }
+        infoItem.setOnMenuItemClickListener(item -> {
+            //do your stuff
+            Intent intent = new Intent(getApplicationContext(), HypertensionInfo.class);
+            startActivity(intent);
+            return true;
         });
 
         MenuItem chatItem = navigationView.getMenu().findItem(R.id.nav_chat);
-        chatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent i = new Intent(HomeActivity.this, ChatActivity.class);
-                startActivity(i);
-                return true;
-            }
+        chatItem.setOnMenuItemClickListener(item -> {
+            Intent i = new Intent(HomeActivity.this, ChatActivity.class);
+            startActivity(i);
+            return true;
         });
 
         navigationView.getMenu().findItem(R.id.logOut).setOnMenuItemClickListener(menuItem -> {
