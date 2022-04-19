@@ -235,7 +235,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
      * Get the units for the currently selected data item
      * @return a String representing the units for the measurement
      */
-    static String getUnits() {
+    public static String getUnits() {
         switch (dataSpinner.getSelectedItem().toString()) {
             case "Sodium":
                 return "milligrams";

@@ -15,7 +15,7 @@ public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
 
-    LoginViewModel() {
+    public LoginViewModel() {
 
     }
 
@@ -33,7 +33,7 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    private boolean isEmailValid(String email) {
+    public boolean isEmailValid(String email) {
         if (email == null) {
             return false;
         }
@@ -44,7 +44,7 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    private boolean isPasswordValid(String password) {
+    public boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }
 }
