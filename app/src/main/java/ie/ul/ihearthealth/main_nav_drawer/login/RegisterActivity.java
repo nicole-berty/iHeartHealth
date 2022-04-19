@@ -7,13 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,9 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
-import ie.ul.ihearthealth.MainActivity;
+import ie.ul.ihearthealth.HomeActivity;
 import ie.ul.ihearthealth.R;
 
+/**
+ * An activity for user registration using email and password
+ */
 public class RegisterActivity extends AppCompatActivity {
     private EditText emailTextView, passwordTextView;
     private Button register;
@@ -109,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // if the user created intent to login activity
                             Intent intent
                                     = new Intent(RegisterActivity.this,
-                                    MainActivity.class);
+                                    HomeActivity.class);
                             finishAffinity();
                             startActivity(intent);
                             finish();

@@ -42,9 +42,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import ie.ul.ihearthealth.MainActivity;
+import ie.ul.ihearthealth.HomeActivity;
 import ie.ul.ihearthealth.R;
 
+/**
+ * An activity for creating new Reminders
+ */
 public class ReminderActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -305,6 +308,11 @@ public class ReminderActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * A method to write given data to the database
+     * @param data A map of data containing a unique date key and a value string with the reminder
+     *             details
+     */
     void writeToDatabase(Map data) {
         Context context = this;
         db.collection("reminders").document(user.getEmail())
@@ -331,6 +339,10 @@ public class ReminderActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * A method to determine whether the submit button should be enabled based on the validity of the
+     * fields in the activity
+     */
     void setSubmitStatus() {
         if(repeatSwitch.isChecked()) {
             int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -342,18 +354,28 @@ public class ReminderActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * A method to check whether a given string is numeric based on a pattern
+     * @param str A string containing a potential number
+     * @return A boolean representing whether the String contains a valid number
+     */
     private boolean isNumeric(String str) {
         return str.matches("\\d+(\\.\\d+)?");
     }
 
+    /**
+     * A method to update a reminder in the database
+     */
     private void updateReminder() {
         db.collection("reminders")
                 .document(user.getEmail())
                 .update(currentDateTimeStr, dataString);
     }
 
+    /**
+     * A method to set a notification for a reminder
+     */
     private void setNotification() {
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         String[] timeSplit = time.getText().toString().split(":");
         int hour = Integer.parseInt(timeSplit[0]);
@@ -403,7 +425,7 @@ public class ReminderActivity extends AppCompatActivity {
         super.onBackPressed();
         SharedPreferences prefs = getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
         if(prefs.getBoolean("fromNotification", false)) {
-            Intent i = new Intent(this, MainActivity.class);
+            Intent i = new Intent(this, HomeActivity.class);
             startActivity(i);
             finish();
         }

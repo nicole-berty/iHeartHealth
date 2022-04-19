@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import ie.ul.ihearthealth.R
 import ie.ul.ihearthealth.databinding.ActivityCalendarBinding
 
-
+/**
+ * An activity for the calendar, where users can create, edit, and delete events
+ */
 class CalendarActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityCalendarBinding

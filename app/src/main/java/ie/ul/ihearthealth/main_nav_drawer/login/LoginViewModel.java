@@ -8,6 +8,9 @@ import android.util.Patterns;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A ViewModel for the Login process, with logic to determine validity when the form is updated
+ */
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();

@@ -13,6 +13,9 @@ interface HasToolbar {
 
 interface HasBackButton
 
+/**
+ * A base fragment to setup the Calendar fragment layout
+ */
 abstract class BaseFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes) {
     val homeActivityToolbar: Toolbar
         get() = (requireActivity() as CalendarActivity).binding.homeToolbar

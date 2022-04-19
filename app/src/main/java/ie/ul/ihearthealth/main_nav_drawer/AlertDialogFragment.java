@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A class for an AlertDialogFragment which shows a dialog pop up with two options
+ */
 public class AlertDialogFragment extends DialogFragment {
 
     AlertDialogListener listener;

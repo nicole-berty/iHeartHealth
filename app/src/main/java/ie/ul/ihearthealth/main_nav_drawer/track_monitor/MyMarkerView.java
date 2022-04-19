@@ -10,6 +10,10 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A class for MarkerViews, which allow a pop up with data to be shown when selecting a data point
+ * on an MPAndroidChart
+ */
 public class MyMarkerView extends MarkerView {
     private TextView tvContent;
 
@@ -21,7 +25,7 @@ public class MyMarkerView extends MarkerView {
     }
 
     // callbacks everytime the MarkerView is redrawn, can be used to update the
-// content (user-interface)
+    // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
         tvContent.setText(MonitorFragment.getPointDetails((int) e.getX(), e.getY()));

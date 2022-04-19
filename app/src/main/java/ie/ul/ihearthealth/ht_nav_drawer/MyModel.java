@@ -1,5 +1,8 @@
-package ie.ul.ihearthealth.model;
+package ie.ul.ihearthealth.ht_nav_drawer;
 
+/**
+ * A Model for the recycler views in the hypertension info fragments
+ */
 public class MyModel
 {
     private String title;

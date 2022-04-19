@@ -17,6 +17,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * An activity which contains a navigation drawer with fragments providing the user information about
+ * hypertension
+ */
 public class HypertensionInfo extends AppCompatActivity {
 
     NavigationView navigationView;
@@ -61,7 +65,7 @@ public class HypertensionInfo extends AppCompatActivity {
                 "SharedPrefs", Context.MODE_PRIVATE);
         Intent i = null;
         if (!sharedPref.getBoolean("loggedOut", false) && sharedPref.getString("menuFragment", "reminder").equals("")) {
-            i = new Intent(this, MainActivity.class);
+            i = new Intent(this, HomeActivity.class);
         } else if(sharedPref.getBoolean("loggedOut", false) && sharedPref.getString("menuFragment", "reminder").equals("")) {
             i = new Intent(this, LoginActivity.class);
         }

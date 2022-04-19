@@ -30,6 +30,9 @@ import java.util.List;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment for medication reminders
+ */
 public class ReminderFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -91,12 +94,21 @@ public class ReminderFragment extends Fragment {
         editor.commit();
     }
 
+    /**
+     * A method to load medications from a list into a recyclerview on the fragment
+     * @param data A list of MedicineReminder objects
+     */
     public void loadMedicines(List<MedicineReminder> data) {
         medicines = data;
         recyclerView.setAdapter(new RecyclerAdapter(medicines, mContext));
         recyclerView.invalidate();
     }
 
+    /**
+     * A method to get a medicine list from given data
+     * @param data An array of Strings containing medication reminders
+     * @return A list of MedicineReminders
+     */
     public List<MedicineReminder> getMedicineList(String[] data) {
         List<MedicineReminder> medicineList = new ArrayList<>();
 
@@ -118,6 +130,9 @@ public class ReminderFragment extends Fragment {
         return medicineList;
     }
 
+    /**
+     * A method to read reminders from the database for a given user
+     */
     private void readFromDatabase() {
         DocumentReference docRef = db.collection("reminders").document(user.getEmail());
 

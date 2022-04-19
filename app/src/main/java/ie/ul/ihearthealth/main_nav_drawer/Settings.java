@@ -58,6 +58,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import ie.ul.ihearthealth.LoginActivity;
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment for user's to adjust their details and app settings
+ */
 public class Settings extends Fragment implements AlertDialogFragment.AlertDialogListener {
     FirebaseUser user;
     boolean usingProvider = false;
@@ -67,6 +70,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
     AuthCredential credential;
     FirebaseFirestore db;
     String userEmail;
+    String currentEmail;
+    Button btn_change_email;
 
     private Context mContext;
 
@@ -103,10 +108,13 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         email = view.findViewById(R.id.email_address);
         pass = view.findViewById(R.id.password);
         user = mAuth.getCurrentUser();
-        if(user != null) userEmail = user.getEmail();
+        if(user != null) {
+            userEmail = user.getEmail();
+            currentEmail = userEmail;
+        }
         EditText repeatPass = view.findViewById(R.id.password2);
 
-        Button btn_change_email = view.findViewById(R.id.btn_change_email);
+        btn_change_email = view.findViewById(R.id.btn_change_email);
         Button btn_change_pass = view.findViewById(R.id.btn_change_pass);
         Button btn_delete_account = view.findViewById(R.id.btn_delete_account);
         Button btn_change_name = view.findViewById(R.id.btn_change_name);
@@ -163,7 +171,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(!usingProvider) {
-                    btn_change_email.setEnabled(email.getText().toString().trim().length() != 0);
+                    btn_change_email.setEnabled(email.getText().toString().trim().length() != 0 &&
+                            !email.getText().toString().equals(currentEmail));
                 }
             }
 
@@ -278,11 +287,15 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         });
     }
 
+    /**
+     * A method to delete user data from the database. It is necessary to first delete sub collections
+     * before deleting a collection
+     */
     void deleteUserData() {
         for(String s : new String[]{"Diastolic Blood Pressure", "Systolic Blood Pressure", "Calories",
             "Alcohol Intake", "Exercise - Hours", "Exercise - Minutes", "Exercise - Steps", "Sodium",
             "Tobacco Intake"}) {
-            readFromDatabase(s);
+            deleteFromDatabase(s);
         }
 
         deleteUserDocument("reminders");
@@ -290,8 +303,12 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         deleteUserDocument("inputData");
     }
 
-    private void readFromDatabase(String collection) {
-        CollectionReference docRef = db.collection("inputData").document(userEmail).collection(collection);
+    /**
+     * A method to delete a sub collection from the database
+     * @param subcollection The sub collection to be deleted
+     */
+    private void deleteFromDatabase(String subcollection) {
+        CollectionReference docRef = db.collection("inputData").document(userEmail).collection(subcollection);
         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -302,7 +319,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                         result.append(document.getId()).append(" ").append(document.getData()).append("\n");
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             DocumentReference docRef2 = db.collection("inputData").document(userEmail)
-                                    .collection(collection).document(document.getId());
+                                    .collection(subcollection).document(document.getId());
                             docRef2.delete().addOnSuccessListener(aVoid -> Snackbar.make(getView(), "Deleted!",
                                     Snackbar.LENGTH_LONG).show());
                         }
@@ -314,6 +331,10 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
         });
     }
 
+    /**
+     * A method to delete a document from the database in a given collection
+     * @param collection A string representing the collection to delete the document from
+     */
     private void deleteUserDocument(String collection) {
         db.collection(collection).document(userEmail)
                 .delete()
@@ -347,6 +368,9 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
     }
 
+    /**
+     * A method to display a notice dialog
+     */
     public void showNoticeDialog() {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new AlertDialogFragment();
@@ -373,6 +397,11 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
 
     }
 
+    /**
+     * A method to reauthenticate users with their provided credentials and take the action they
+     * requested such as deleting the account or changing password
+     * @param credential A Credential object containing the user's credentials
+     */
     void reauthenticateAndTakeAction(AuthCredential credential) {
         user.reauthenticate(credential)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -393,36 +422,46 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                             } else if(change.equals("delete")) {
                                 deleteUserData();
                             } else {
-                                user.updateEmail(email.getText().toString())
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    userEmail = email.getText().toString();
-                                                    Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_LONG).show();
-                                                } else {
-                                                    try
-                                                    {
-                                                        throw task.getException();
-                                                    }
-                                                    catch (FirebaseAuthInvalidCredentialsException malformedEmail)
-                                                    {
-                                                        Toast.makeText(getContext(), "Incorrect email format", Toast.LENGTH_LONG).show();
-                                                    }
-                                                    catch (FirebaseAuthUserCollisionException existEmail)
-                                                    {
-                                                        Toast.makeText(getContext(), "The provided email address is registered to another account", Toast.LENGTH_LONG).show();
-                                                    }
-                                                    catch (Exception e)
-                                                    {
-                                                        Log.d(TAG, "Email change exception: " + e.getMessage());
-                                                    }
-                                                }
-                                            }
-                                        });
+                                updateUserEmail();
                             }
                         } else {
                             Toast.makeText(getContext(), "Re-authentication failed, please try again", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * A method to update the user's email in the database, with Toast's displayed to the user if
+     * the email cannot be changed for some reason such as the email has already been used
+     */
+    private void updateUserEmail() {
+        user.updateEmail(email.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            userEmail = email.getText().toString();
+                            currentEmail = userEmail;
+                            btn_change_email.setEnabled(false);
+                            Toast.makeText(getContext(), "Email updated successfully", Toast.LENGTH_LONG).show();
+                        } else {
+                            try
+                            {
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthInvalidCredentialsException malformedEmail)
+                            {
+                                Toast.makeText(getContext(), "Incorrect email format", Toast.LENGTH_LONG).show();
+                            }
+                            catch (FirebaseAuthUserCollisionException existEmail)
+                            {
+                                Toast.makeText(getContext(), "The provided email address is registered to another account", Toast.LENGTH_LONG).show();
+                            }
+                            catch (Exception e)
+                            {
+                                Log.d(TAG, "Email change exception: " + e.getMessage());
+                            }
                         }
                     }
                 });

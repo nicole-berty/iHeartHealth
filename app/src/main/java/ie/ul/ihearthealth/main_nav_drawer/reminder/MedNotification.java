@@ -14,10 +14,13 @@ import java.util.Calendar;
 
 import ie.ul.ihearthealth.HypertensionInfo;
 import ie.ul.ihearthealth.LoginActivity;
-import ie.ul.ihearthealth.MainActivity;
+import ie.ul.ihearthealth.HomeActivity;
 import ie.ul.ihearthealth.R;
 import ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarActivity;
 
+/**
+ * A class for medicine reminder notifications
+ */
 public class MedNotification extends AppCompatActivity {
 
     @Override
@@ -79,7 +82,7 @@ public class MedNotification extends AppCompatActivity {
                     case "chat":
                     case "main":
                     default:
-                        i = new Intent(MedNotification.this, MainActivity.class);
+                        i = new Intent(MedNotification.this, HomeActivity.class);
                         break;
                 }
 

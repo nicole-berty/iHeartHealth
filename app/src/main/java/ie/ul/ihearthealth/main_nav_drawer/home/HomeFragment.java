@@ -29,6 +29,9 @@ import java.util.TreeMap;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment to display the home page of the application, which the user sees when first logged in
+ */
 public class HomeFragment extends Fragment {
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -74,6 +77,12 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * A function which gets the last blood pressure measurement logged by the user from the database
+     * @param map A TreeMap of a date mapped to a String representing the blood pressure measurement
+     * @param isDiastolic A boolean to indicate whether the value is Diastolic or not
+     * @return a String representing the last blood pressure measurement
+     */
     private String getLastValue(TreeMap<LocalDate,String> map, boolean isDiastolic) {
         String lastValue = "";
         String vals = map.lastEntry().getValue().replace("{", "");
@@ -96,6 +105,12 @@ public class HomeFragment extends Fragment {
        return lastValue;
     }
 
+    /**
+     * A method to read from the Firestore Database to obtain the last blood pressure reading for the
+     * current user
+     * @param collection The subcollection within the current user's document
+     * @param collection2 Another subcollection within the current user's document
+     */
     private void readFromDatabase(String collection, String collection2) {
         CollectionReference docRef = db.collection("inputData").document(user.getEmail()).collection(collection);
         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -146,6 +161,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * A method to update the recommendation testview based on the user's last provided blood pressure
+     * reading
+     */
     private void updateRecommendation() {
         if(systolicValue < 140 && diastolicValue < 90) {
             recommendation.setText("Your blood pressure is within the ideal range - your systolic blood pressure is below 140 mmHg and your diastolic" +

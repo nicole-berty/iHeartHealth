@@ -15,9 +15,12 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import ie.ul.ihearthealth.MainActivity;
+import ie.ul.ihearthealth.HomeActivity;
 import ie.ul.ihearthealth.R;
 
+/**
+ * An AlarmBroadcast which is used to create and set notifications for given times
+ */
 public class AlarmBroadcast extends BroadcastReceiver {
     private static final String CHANNEL_ID = "ie.ul.ihearthealth.notificationReminderId";
 
@@ -32,7 +35,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(HomeActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
 
         int id = sharedPref.getInt("notificationNumber", 0);

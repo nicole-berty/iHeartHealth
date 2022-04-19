@@ -30,6 +30,9 @@ import java.util.Map;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * An adapter for the medicine reminder recyclerview
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private List<MedicineReminder> medicines;

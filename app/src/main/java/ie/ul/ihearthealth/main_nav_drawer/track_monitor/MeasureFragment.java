@@ -40,6 +40,9 @@ import java.util.Map;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment for users to provide measurements which will be stored in the database
+ */
 public class MeasureFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private FirebaseFirestore db;
@@ -242,6 +245,13 @@ public class MeasureFragment extends Fragment implements AdapterView.OnItemSelec
         });
     }
 
+    /**
+     * A method to write data to a given collection in the database with the current date as the document
+     * @param collection A string representing the collection in the database to be written to
+     * @param currentDate A string representing the current date which will be the document in the user's
+     *                    sub collection for the collection
+     * @param data A map of data containing the logged value mapped to a timestamp
+     */
     public void writeToDatabase(String collection, String currentDate, Map data) {
         db.collection("inputData").document(user.getEmail()).collection(collection).document(currentDate)
                 .set(data, SetOptions.merge())
@@ -261,6 +271,11 @@ public class MeasureFragment extends Fragment implements AdapterView.OnItemSelec
                 });
     }
 
+    /**
+     * A method to check whether a given string is numeric based on a pattern
+     * @param str A string containing a potential number
+     * @return A boolean representing whether the String contains a valid number
+     */
     public boolean isNumeric(String str) {
         return str.matches("\\d+(\\.\\d+)?");
     }

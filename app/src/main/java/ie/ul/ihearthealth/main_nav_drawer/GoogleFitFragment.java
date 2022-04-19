@@ -53,6 +53,9 @@ import java.util.concurrent.TimeUnit;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment for users to integrate Google Fit with their account
+ */
 public class GoogleFitFragment extends Fragment {
     private Context mContext;
     private TextView dailyStepCount;
@@ -156,6 +159,11 @@ public class GoogleFitFragment extends Fragment {
         });
     }
 
+    /**
+     * Check if the user has granted Google permissions which are required to read data from Google
+     * Fit
+     * @return A boolean which represents whether the user has granted permissions
+     */
     private boolean hasPermissions() {
         FitnessOptions fitnessOptions = getFitnessOptions();
         if(GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions)) {
@@ -164,6 +172,9 @@ public class GoogleFitFragment extends Fragment {
         return false;
     }
 
+    /**
+     * Get permissions from the user which are required for Google Fit
+     */
     private void getPermissions() {
         GoogleSignIn.requestPermissions(
                 getActivity(),
@@ -172,6 +183,9 @@ public class GoogleFitFragment extends Fragment {
                 getFitnessOptions());;
     }
 
+    /**
+     * A method to get historical step data from Google Fit
+     */
     private void getHistoricalStepData() {
         if(!hasPermissions()) {
             getPermissions();
@@ -210,6 +224,10 @@ public class GoogleFitFragment extends Fragment {
                         });
     }
 
+    /**
+     * A method to add the user's steps count for the last week from Google fit to the Firestore
+     * database in their collection
+     */
     private void addStepsToDatabase() {
         if(dbDatasets.size() > 0) {
             for(DataSet ds : dbDatasets) {
@@ -234,6 +252,12 @@ public class GoogleFitFragment extends Fragment {
         }
     }
 
+    /**
+     * A method to write data to the Firestore database
+     * @param currentDate A string representing the current date, which will be the document to be
+     *                    written to
+     * @param data A Map of data to be written, which will contain time keys with steps values
+     */
     public void writeToDatabase(String currentDate, Map data) {
         db.collection("inputData").document(user.getEmail()).collection("Exercise - Steps").document(currentDate)
                 .set(data, SetOptions.merge())
@@ -253,6 +277,11 @@ public class GoogleFitFragment extends Fragment {
                 });
     }
 
+    /**
+     * A method to dump the user's data from Google Fit into a table on the fragment
+     * @param dataSet A Google dataset object which contains data points with the user's steps data
+     *                from Google Fit
+     */
     private void dumpDataSet(DataSet dataSet) {
         DateFormatSymbols symbols = new DateFormatSymbols(new Locale("en"));
         String[] dayNames = symbols.getShortWeekdays();
@@ -300,6 +329,9 @@ public class GoogleFitFragment extends Fragment {
         }
     }
 
+    /**
+     * A method to get the user's step count delta from Google Fit
+     */
     private void getStepCountDelta() {
         if(!hasPermissions()) {
             getPermissions();
@@ -325,6 +357,10 @@ public class GoogleFitFragment extends Fragment {
                         });
     }
 
+    /**
+     * A method to get FitnessOptions
+     * @return A FitnessOptions object
+     */
     private FitnessOptions getFitnessOptions() {
         // Request access to step count data from Fit history
         return FitnessOptions.builder()

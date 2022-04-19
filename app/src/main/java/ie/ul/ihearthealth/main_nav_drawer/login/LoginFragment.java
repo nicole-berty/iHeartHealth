@@ -26,9 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ie.ul.ihearthealth.HypertensionInfo;
-import ie.ul.ihearthealth.MainActivity;
-
-import ie.ul.ihearthealth.R;
+import ie.ul.ihearthealth.HomeActivity;
 import ie.ul.ihearthealth.databinding.FragmentLoginBinding;
 
 import com.facebook.AccessToken;
@@ -36,7 +34,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -51,9 +48,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class LoginFragment extends Fragment {
 
@@ -225,17 +220,27 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     * A method to move from the current activity to the home activity
+     */
     private void moveToHomeActivity() {
-        Intent intent = new Intent(mContext, MainActivity.class);
+        Intent intent = new Intent(mContext, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
+    /**
+     * A method to sign in to the application using the Google sign in client
+     */
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * A method to handle the Facebook access token produced when logging in with Facebook
+     * @param token An access token provided by the Facebook login provider
+     */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -273,6 +278,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * A method to handle the result of the Google sign in attempt
+     * @param completedTask The completed Google Sign In Account task
+     */
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -286,6 +295,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * A method to sign into the app with Google using FirebaseAuth
+     * @param idToken An id token used to login with Google credentials
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
@@ -305,6 +318,11 @@ public class LoginFragment extends Fragment {
                 });
     }
 
+    /**
+     * A method to login with an email and password
+     * @param email A string representing an email provided by the user
+     * @param password A string representing a password provided by the user
+     */
     private void logIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {

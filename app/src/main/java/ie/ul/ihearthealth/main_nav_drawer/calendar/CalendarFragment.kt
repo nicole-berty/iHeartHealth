@@ -29,7 +29,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import ie.ul.ihearthealth.MainActivity
+import ie.ul.ihearthealth.HomeActivity
 import ie.ul.ihearthealth.R
 import ie.ul.ihearthealth.databinding.CalendarDayBinding
 import ie.ul.ihearthealth.databinding.CalendarEventItemViewBinding
@@ -40,9 +40,12 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
+/* An object representing Events in the calendar and containing their details */
 data class Event(val id: String, val appointmentName: String, val appointmentTime: String, val date: LocalDate)
 
+/**
+ * An adapter for the recyclerview of calendar events
+ */
 class CalendarEventsAdapter(val onClick: (Event) -> Unit) :
     RecyclerView.Adapter<CalendarEventsAdapter.CalendarEventsViewHolder>() {
 
@@ -75,6 +78,10 @@ class CalendarEventsAdapter(val onClick: (Event) -> Unit) :
     }
 }
 
+/**
+ * A fragment which inherits the base fragment and displays the calendar with events on it and a recyclerview
+ * of the selected day's events shown below the calendar
+ */
 class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton, EventDialogFragment.EventDialogListener {
     private val dialog: DialogFragment = EventDialogFragment()
     private val db = FirebaseFirestore.getInstance()
@@ -227,7 +234,15 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
     }
 
+    /*
+    A function to add an event with the given parameters to the events map, which is used to populate
+    the calendar
+     */
     private fun loadEvent(id: String, name: String, time: String, date: LocalDate) {
+        // First loop through the current event map and if the date matches a date in the list,
+        // iterate through the event list for the date and see if any event id matches the id parameter
+        // with any spaces removes. If an event with that id does exist, remove it, and add the new
+        // version using the parameters provided.
         for ((date1, eventList) in events) {
             if(date1 == date) {
                 for(event in eventList) {
@@ -242,6 +257,10 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         events[date] = events[date].orEmpty().plus(Event(id.replace(" ", ""), name, time, date))
     }
 
+    /*
+    A function to select a date on the calendar, updating the recycler view to reflect the events of
+    the newly selected date
+     */
     private fun selectDate(date: LocalDate) {
         if (selectedDate != date) {
             val oldDate = selectedDate
@@ -252,6 +271,10 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
     }
 
+    /*
+    A function to save an event with the provided parameters to the events map, provided that an event
+    with that id does not already exist to prevent duplicates
+     */
     private fun saveEvent(name: String, time: String, date: LocalDate) : String {
         var id = UUID.randomUUID().toString()
         var exists = false
@@ -265,12 +288,20 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         return id
     }
 
+    /*
+    A function to delete events, removing them from the events map and calling another function to
+    delete the event from the database
+     */
     private fun deleteEvent(event: Event) {
         val date = event.date
         events[date] = events[date].orEmpty().minus(event)
         deleteFromDatabase(event.id.replace(" ", ""), date)
     }
 
+    /*
+    A function to update the recyclerview adapter containing events for a given date, provided as a
+    parameter.
+     */
     private fun updateAdapterForDate(date: LocalDate) {
         eventsAdapter.apply {
             events.clear()
@@ -294,12 +325,15 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         val sharedPref = activity?.getSharedPreferences("SharedPrefs", AppCompatActivity.MODE_PRIVATE)
         val menuFragment: String = sharedPref?.getString("menuFragment", "").toString()
         if (menuFragment == "") {
-                val i = Intent(activity, MainActivity::class.java)
+                val i = Intent(activity, HomeActivity::class.java)
                 startActivity(i)
         }
         activity?.finish()
     }
 
+    /*
+    A function called when the positive button on the dialog fragment is clicked
+     */
     override fun onDialogPositiveClick(dialog: DialogFragment?) {
         val appointmentName = dialog!!.dialog!!.findViewById<EditText>(R.id.appointmentName)
         val appointmentTime = dialog.dialog!!.findViewById<TextView>(R.id.preview_picked_time_textView)
@@ -329,9 +363,17 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
     }
 
+    /*
+    A function called when the negative button on the dialog fragment is clicked - in this case, it
+    does nothing, and the dialog fragment simply closes
+     */
     override fun onDialogNegativeClick(dialog: DialogFragment?) {
     }
 
+    /*
+    A function to update an event in the database. Once the edit has been successfully made, the local
+    adapter data is updated to reflect the event changes.
+     */
     private fun updateDatabase(id: String, data: String, eventDate: LocalDate) {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
         docRef
@@ -345,6 +387,12 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
             .addOnFailureListener { e -> Log.w("TAG", "Error updating document", e) }
     }
 
+    /*
+    A function to read from the database - this reads all of the calendar events for the current user
+    from the Firebase database and calls the method to update the recyclerview adapter for the date,
+    the loadEvent method to add the event to the event map, and the method to notify the calendar view
+    has changed
+     */
     private fun readFromDatabase() {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
 
@@ -376,6 +424,11 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         })
     }
 
+    /*
+    A function to delete an event from the database given an event id and a date for a given user. If
+    the event is successfully complete, the calendar view is update to remove the event locally from
+    the view and the adapter
+     */
     private fun deleteFromDatabase(id: String, eventDate: LocalDate) {
         val docRef = db.collection("calendar").document(user?.getEmail().toString())
 
@@ -394,6 +447,11 @@ class CalendarFragment : BaseFragment(R.layout.calendar_fragment), HasBackButton
         }
     }
 
+    /*
+    A function to write an event to the database given a map of data and a date. Once the event is
+    written, the local calendar view and adapter are updated and the date that was written to is selected
+    in the view
+     */
     private fun writeToDatabase(data: Map<String, String>?, eventDate: LocalDate) {
         db.collection("calendar").document(user?.getEmail().toString())
             .set(data!!, SetOptions.merge())

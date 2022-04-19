@@ -53,6 +53,9 @@ import java.util.TreeMap;
 
 import ie.ul.ihearthealth.R;
 
+/**
+ * A fragment for users to monitor the trends in their provided data over time
+ */
 public class MonitorFragment extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
     private static Spinner dataSpinner;
@@ -218,8 +221,9 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         });
     }
 
-    /*
-    Use the Calendar add method to extraNum years to the current years. Extra num can be a negative.
+    /**
+     * Use the Calendar add method to extraNum years to the current year. Extra num can be a negative.
+     * @param extraNum An integer which represents the number of years to be added to the current year
      */
     void addToYears(int extraNum) {
         Calendar cal = Calendar.getInstance();
@@ -227,8 +231,9 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         years.add(cal.get(Calendar.YEAR));
     }
 
-    /*
-    Get the units for the currently selected data item
+    /**
+     * Get the units for the currently selected data item
+     * @return a String representing the units for the measurement
      */
     static String getUnits() {
         switch (dataSpinner.getSelectedItem().toString()) {
@@ -253,8 +258,11 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         }
     }
 
-    /*
-    Get the details for the currently selected data point on the graph
+    /**
+     * Get the details for the currently selected data point on the graph
+     * @param day An integer representing the day of the month
+     * @param value An integer representing the value on the y axis for that point
+     * @return A string containing the details of the selected point
      */
     static String getPointDetails(int day, float value) {
         String details = "Date: " + day + " " + monthSpinner.getSelectedItem().toString() + " " + yearSpinner.getSelectedItem().toString() + "\n Value: " + value + " ";
@@ -262,8 +270,14 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         return details;
     }
 
-    /*
-    Create a grouped line chart using the MPAndroidChart library methods
+    /**
+     * Create a grouped line chart using the MPAndroidChart library methods
+     * @param view The current View in the fragment
+     * @param graphData A Map of the data for the graph, containing String values mapped to LocalDates
+     * @param graphData2 A second Map of data for the graph, used for blood pressure graphs only
+     * @param month An integer representing the current month
+     * @param year An integer representing the current year
+     * @param chartID An integer representing the id of the chart on the view
      */
     @SuppressLint("NewApi")
     public void groupLineChart(View view, Map<LocalDate, String> graphData, Map<LocalDate, String> graphData2, int month, int year, int chartID){
@@ -343,6 +357,16 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         }
     }
 
+    /**
+     * A method to obtain the graph data and plot it
+     * @param graphData A Map of data for the graph, with String values mapped to dates
+     * @param year An integer representing the year
+     * @param month An integer representing the month
+     * @param chartData A LineData object of chart data which can be plotted
+     * @param isBPGraph A boolean to determine whether the graph is for blood pressure
+     * @param isRed A boolean to determine whether the graph data points should be red, only applicable
+     *              to blood pressure graphs
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     void getMapData(Map<LocalDate, String> graphData, int year, int month, LineData chartData, boolean isBPGraph, boolean isRed) {
         ArrayList<Integer> coloursUsed = new ArrayList<>();
@@ -410,6 +434,20 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         } else if(!isRed) {
             averageDayVal.setText("Average daily intake: " + String.format("%.2f", dailyAverage) + " " + getUnits() + " based on values logged for " + numDays + " " + days + ".");
         }
+       updateRecommendations(dailyAverage, isRed, numDays, days);
+    }
+
+    /**
+     * A method to update the recommendations and feedback shown to the user beneath the graph based
+     * on the current graph
+     * @param dailyAverage A double representing the average daily value for the measurement
+     * @param isRed A boolean to determine whether the graph data points should be red, for blood
+     *              pressure graphs
+     * @param numDays An integer representing the number of days that values were lgoged for throughout
+     *                the month
+     * @param days An String that says "days" or "day" depending on whether numDays is 1 or greater
+     */
+    private void updateRecommendations(double dailyAverage, boolean isRed, int numDays, String days) {
         switch (dataSpinner.getSelectedItem().toString()) {
             case "Sodium Intake":
                 if(dailyAverage < 2500) {
@@ -436,7 +474,7 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
                 if(dailyAverage >= 10000) {
                     averageDayVal.append("\n\nYour exercise levels in steps are great! Keep up the good work - exercise helps to maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
                 } else {
-                    averageDayVal.append("\n\nYour exercise levels are below the recommended daily amount. You should aim to complete 150 - 300 minutes of moderate intensity aerobic activity per week - this helps to " +
+                    averageDayVal.append("\n\nYour exercise levels are below the recommended daily amount - try to do 10,000 steps per day. You should aim to complete 150 - 300 minutes of moderate intensity aerobic activity per week - this helps to " +
                             "maintain a healthy weight, reduces blood pressure and resting heart rate, and is good for your mental health!");
                 }
                 break;
@@ -489,6 +527,17 @@ public class MonitorFragment extends Fragment implements OnChartGestureListener,
         }
     }
 
+    /**
+     * A method to read the user's inputted data for the currently selected measurement from the
+     * database
+     * @param collection A string representing the name of the sub collection to read from
+     * @param collection2 A string representing the name of the sub collection to read from,
+     *                    only used for blood pressure graphs which read from systolic and diastolic
+     *                    sub collections
+     * @param view The current View in the fragment
+     * @param month An integer representing the selected month
+     * @param year An integer representing the selected year
+     */
     private void readFromDatabase(String collection, String collection2, View view, int month, int year) {
         CollectionReference docRef = db.collection("inputData").document(user.getEmail()).collection(collection);
         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

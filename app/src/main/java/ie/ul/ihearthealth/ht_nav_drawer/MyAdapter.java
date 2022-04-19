@@ -1,4 +1,4 @@
-package ie.ul.ihearthealth.adapter;
+package ie.ul.ihearthealth.ht_nav_drawer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.model.MyModel;
 
+/**
+ * Adapter for the RecyclerViews on the hypertension information fragments
+ */
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
@@ -43,6 +45,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /**
+     *  A method to set the text size in the recycler view
+     * @param textSize An integer representing the size of the text
+     */
     public void setTextSizes(int textSize) {
         this.textSize = textSize;
         notifyDataSetChanged();

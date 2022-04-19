@@ -1,5 +1,8 @@
 package ie.ul.ihearthealth.main_nav_drawer.reminder;
 
+/**
+ * A class to creates objects representing a Medication reminder
+ */
 public class MedicineReminder {
 
     private String id;

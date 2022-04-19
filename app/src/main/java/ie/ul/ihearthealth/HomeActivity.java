@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -38,7 +37,11 @@ import androidx.appcompat.widget.Toolbar;
 import ie.ul.ihearthealth.main_nav_drawer.calendar.CalendarActivity;
 import sdk.chat.core.session.ChatSDK;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * The home activity for the app, which contains a navigation drawer that the user can use to
+ * navigate the app
+ */
+public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     GoogleApiClient mGoogleApiClient;
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         chatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent i = new Intent(MainActivity.this, ChatActivity.class);
+                Intent i = new Intent(HomeActivity.this, ChatActivity.class);
                 startActivity(i);
                 return true;
             }
@@ -153,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * A method to logout out from the application using Firebase Auth and the Google and Facebook
+     * logout methods. Also attempts to stop the Chat SDK in case it is still running
+     */
     private void logout() {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
         FirebaseAuth.getInstance().signOut();
@@ -163,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             ChatSDK.ui().stop();
         } catch (NullPointerException ignored) {
-
         }
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

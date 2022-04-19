@@ -20,6 +20,9 @@ import sdk.chat.firebase.ui.FirebaseUIModule;
 import sdk.chat.firebase.upload.FirebaseUploadModule;
 import sdk.chat.ui.module.UIModule;
 
+/**
+ * An activity for the Chat SDK for Android, which allows users to chat with each other
+ */
 public class ChatActivity extends AppCompatActivity {
 
     @Override
@@ -48,10 +51,17 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * A method to open the ChatSDK activity
+     */
     void openChat() {
         ChatSDK.ui().startMainActivity(this);
     }
 
+    /**
+     * A method to attempt calling stop on the ChatSDK
+     * @return A boolean representing whether the Chat SDK has been stopped
+     */
     boolean tryStop () {
         try {
             ChatSDK.ui().stop();
@@ -62,6 +72,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * A method to try to start the Chat SDK
+     */
     void startChat() {
        try {
             ChatSDK.builder()

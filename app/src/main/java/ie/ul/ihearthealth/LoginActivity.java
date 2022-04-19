@@ -11,6 +11,9 @@ import android.os.Bundle;
 
 import ie.ul.ihearthealth.main_nav_drawer.login.LoginFragment;
 
+/**
+ * The launcher activity for the app which starts when the app first opens
+ */
 public class LoginActivity extends AppCompatActivity {
 
     @Override

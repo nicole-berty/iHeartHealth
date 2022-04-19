@@ -13,12 +13,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.adapter.MyAdapter;
-import ie.ul.ihearthealth.model.MyModel;
 
 /**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
+ * A fragment containing information on the resources available to people with high blood pressure
  */
 public class HtResources extends Fragment {
 

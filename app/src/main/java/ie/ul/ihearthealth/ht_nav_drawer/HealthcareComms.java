@@ -13,11 +13,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ie.ul.ihearthealth.R;
-import ie.ul.ihearthealth.adapter.MyAdapter;
-import ie.ul.ihearthealth.model.MyModel;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment containing information on how to communicate with healthcare professionals
  */
 public class HealthcareComms extends Fragment {
     private RecyclerView recyclerView;
