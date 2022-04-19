@@ -67,6 +67,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
     String change = "Email";
     EditText email;
     EditText pass;
+    EditText repeatPass;
     AuthCredential credential;
     FirebaseFirestore db;
     String userEmail;
@@ -112,7 +113,7 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
             userEmail = user.getEmail();
             currentEmail = userEmail;
         }
-        EditText repeatPass = view.findViewById(R.id.password2);
+        repeatPass = view.findViewById(R.id.password2);
 
         btn_change_email = view.findViewById(R.id.btn_change_email);
         Button btn_change_pass = view.findViewById(R.id.btn_change_pass);
@@ -419,6 +420,8 @@ public class Settings extends Fragment implements AlertDialogFragment.AlertDialo
                                                     }
                                                 }
                                             });
+                                    pass.setText("");
+                                    repeatPass.setText("");
                             } else if(change.equals("delete")) {
                                 deleteUserData();
                             } else {

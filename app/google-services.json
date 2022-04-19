@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "988178322312-ookg5dfmeulicnqc97onb5gemldg4vjd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ie.ul.ihearthealth",
+            "certificate_hash": "0005ce90ec45d97949fe945b065563327eeaee3d"
+          }
+        },
+        {
           "client_id": "988178322312-mvkjvoqhv03j7kkrp59211dmgf2sh5pl.apps.googleusercontent.com",
           "client_type": 3
         }
