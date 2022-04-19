@@ -1,5 +1,9 @@
 # iHeartHealth
 
+**Nicole Berty - 18246702**
+
+*The apk is located in \<projectLocation>\iHeartHealth\app\build\outputs\apk\debug - you will need to enable installing apps from external sources in your phone or emulator's settings to be able to install the app this way.*
+
 iHeartHealth is an Android application that enables users to learn about hypertension and supports them in managing this condition.
 
 The application offers a range of features including:
