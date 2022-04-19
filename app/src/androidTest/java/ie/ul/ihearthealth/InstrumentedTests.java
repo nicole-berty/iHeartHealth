@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LoginRegisterInstrumentedTest {
+public class InstrumentedTests {
 
     @Test
     public void useAppContext() {
