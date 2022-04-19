@@ -12,8 +12,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -23,66 +25,68 @@
                 android:id="@+id/submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="40dp"
                 android:enabled="false"
                 android:text="Submit"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.535"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
             <Spinner
                 android:id="@+id/spinner2"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
                 android:layout_marginEnd="7dp"
-                app:layout_constraintBottom_toBottomOf="@+id/measurement"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/measurement"
-                app:layout_constraintTop_toTopOf="@+id/measurement" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <EditText
                 android:id="@+id/measurement"
-                android:layout_width="136dp"
-                android:layout_height="50dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
                 android:layout_marginEnd="8dp"
                 android:hint="Value"
                 android:inputType="numberSigned"
+                android:padding="20dp"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/spinner"
                 app:layout_constraintEnd_toStartOf="@+id/spinner2"
                 app:layout_constraintStart_toEndOf="@+id/spinner"
-                app:layout_constraintTop_toTopOf="@+id/spinner"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                app:layout_constraintWidth_percent="0.3" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="0dp"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="112dp"
+                android:layout_marginTop="56dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toStartOf="@+id/measurement"
+                app:layout_constraintHeight_percent="0.2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/infoTv"
-                android:layout_width="335dp"
-                android:layout_height="373dp"
-                android:layout_marginTop="28dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
                 android:textSize="20sp"
+                android:paddingBottom="86dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/submit" />
 
             <NumberPicker
                 android:id="@+id/systolicValue"
-                android:layout_width="49dp"
-                android:layout_height="55dp"
-                android:layout_marginStart="140dp"
-                android:layout_marginTop="112dp"
+                android:layout_width="52dp"
+                android:layout_height="61dp"
+                android:layout_marginStart="148dp"
+                android:layout_marginTop="32dp"
                 android:inputType="numberSigned"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
@@ -90,27 +94,28 @@
                 android:textSize="24sp"
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/bp_forward_slash"
                 android:layout_width="19dp"
                 android:layout_height="54dp"
-                android:layout_marginTop="112dp"
+                android:layout_marginTop="32dp"
                 android:text="/"
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toStartOf="@+id/diastolicVal"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/systolicValue"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <NumberPicker
                 android:id="@+id/diastolicVal"
                 android:layout_width="46dp"
                 android:layout_height="54dp"
-                android:layout_marginTop="112dp"
-                android:layout_marginEnd="124dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="136dp"
                 android:inputType="numberSigned"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
@@ -118,15 +123,17 @@
                 android:textSize="24sp"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="195dp"
-                android:layout_height="78dp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/evaluation"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.2"
+                android:maxHeight="@dimen/nav_header_height"
                 app:layout_constraintHorizontal_bias="0.546"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

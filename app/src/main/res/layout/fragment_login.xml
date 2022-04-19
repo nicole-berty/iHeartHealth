@@ -13,8 +13,8 @@
 
     <TextView
         android:id="@+id/or_text"
-        android:layout_width="185dp"
-        android:layout_height="33dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="Or connect using"
         android:textAlignment="center"
@@ -59,8 +59,9 @@
 
     <Button
         android:id="@+id/login"
-        android:layout_width="113dp"
-        android:layout_height="49dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
         android:layout_gravity="start"
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
@@ -90,8 +91,8 @@
 
     <TextView
         android:id="@+id/register"
-        android:layout_width="205dp"
-        android:layout_height="51dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="Not yet registered? Click here to register now!"
         android:textAlignment="center"
@@ -105,8 +106,8 @@
 
     <TextView
         android:id="@+id/infoButton"
-        android:layout_width="201dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="Don't want to login? Click here to learn about hypertension instead."
         android:textAlignment="center"
@@ -119,7 +120,8 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
-        android:layout_height="116dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.2"
         android:layout_marginBottom="8dp"
         android:src="@drawable/ihh_logo"
         app:layout_constraintBottom_toTopOf="@+id/username"
@@ -129,22 +131,22 @@
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/fb_login_button"
-        android:layout_width="197dp"
-        android:layout_height="71dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/google_sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/or_text"
-        app:layout_constraintVertical_bias="0.306"
+        app:layout_constraintVertical_bias="0.677"
         tools:ignore="TouchTargetSizeCheck" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="76dp"
         app:layout_constraintBottom_toTopOf="@+id/register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

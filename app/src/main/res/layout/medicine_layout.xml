@@ -16,7 +16,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_medicine"
-                android:layout_width="338dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -66,8 +66,9 @@
 
             <ImageButton
                 android:id="@+id/medicine_delete_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/baseline_remove_circle_outline_24"
             />

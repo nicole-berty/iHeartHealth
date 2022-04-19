@@ -8,8 +8,9 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="118dp"
-        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
         android:layout_marginTop="28dp"
         android:text="Okay!"
         android:textSize="18sp"
@@ -31,8 +32,10 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="197dp"
-        android:layout_height="186dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintWidth_percent="0.5"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

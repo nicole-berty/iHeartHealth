@@ -25,8 +25,9 @@
 
             <TextView
                 android:id="@+id/daily_step_count"
-                android:layout_width="222dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="12dp"
@@ -58,7 +59,8 @@
 
             <TableLayout
                 android:id="@+id/tableLayout"
-                android:layout_width="378dp"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.85"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:stretchColumns="1"
@@ -69,7 +71,8 @@
                 <TableRow>
 
                     <TextView
-                        android:layout_width="114dp"
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="20dp"
                         android:layout_height="match_parent"
                         android:padding="3dip"
                         android:text="Date"
@@ -83,14 +86,15 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="103dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:padding="3dip"
                         android:text="End Time"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="83dp"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_height="match_parent"
                         android:padding="3dip"
                         android:text="Steps"
@@ -101,8 +105,8 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="284dp"
-                android:layout_height="33dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
@@ -116,7 +120,7 @@
 
             <TextView
                 android:id="@+id/permissionTv"
-                android:layout_width="297dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Don't want to share your fitness data with iHeartHealth anymore?\nPress the button below to revoke these permissions and we'll stop reading your data."
@@ -140,9 +144,9 @@
 
             <TextView
                 android:id="@+id/shareDataTv"
-                android:layout_width="345dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_margin="20dp"
                 android:text="@string/shareDataWithIhh"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"

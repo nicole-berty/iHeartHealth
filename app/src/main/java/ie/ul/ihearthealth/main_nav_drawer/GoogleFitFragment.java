@@ -166,10 +166,7 @@ public class GoogleFitFragment extends Fragment {
      */
     private boolean hasPermissions() {
         FitnessOptions fitnessOptions = getFitnessOptions();
-        if(GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions)) {
-            return true;
-        }
-        return false;
+        return GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mContext), fitnessOptions);
     }
 
     /**

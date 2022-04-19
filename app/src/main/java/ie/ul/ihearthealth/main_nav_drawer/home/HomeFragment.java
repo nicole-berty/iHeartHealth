@@ -188,5 +188,6 @@ public class HomeFragment extends Fragment {
 
         recommendation.append("\n\n");
         recommendation.append(mContext.getResources().getString(R.string.source_who));
+        recommendation.append("\n\n");
     }
 }

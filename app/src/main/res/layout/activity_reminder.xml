@@ -113,8 +113,9 @@
 
             <RadioGroup
                 android:id="@+id/radioGroup2"
-                android:layout_width="317dp"
-                android:layout_height="251dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.75"
                 android:layout_marginTop="17dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.494"
@@ -158,8 +159,9 @@
 
             <Switch
                 android:id="@+id/repeatSwitch"
-                android:layout_width="151dp"
-                android:layout_height="51dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_marginTop="14dp"
                 android:text="Repeats?"
                 android:textSize="22sp"
@@ -169,14 +171,15 @@
 
             <Spinner
                 android:id="@+id/dosageSpinner"
-                android:layout_width="126dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="88dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/medDosage"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.34" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

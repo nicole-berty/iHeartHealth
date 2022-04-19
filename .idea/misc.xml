@@ -38,6 +38,7 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_register.xml" value="0.2" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_reminder.xml" value="0.264" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/activity_test.xml" value="0.1" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/app_bar_hypertension_info.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/app_bar_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/calendar_day.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/calendar_day_layout.xml" value="0.264" />
@@ -48,6 +49,7 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/content_main.xml" value="0.13072916666666667" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/dialog_create_event.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/dialog_signin.xml" value="0.4" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/empty_activity_chat.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/example_3_calendar_day.xml" value="0.1421875" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/example_3_calendar_header.xml" value="0.1421875" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/example_3_event_item_view.xml" value="0.1421875" />
@@ -63,7 +65,7 @@
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_hypertension_info.xml" value="0.13125" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_login.xml" value="0.2" />
-        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_measure.xml" value="0.4" />
+        <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_measure.xml" value="0.264" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_monitor.xml" value="0.32365875109938436" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_register.xml" value="0.1" />
         <entry key="..\:/Users/nicol/StudioProjects/iHeartHealth/app/src/main/res/layout/fragment_reminder.xml" value="0.264" />
