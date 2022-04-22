@@ -23,9 +23,11 @@ import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static org.junit.Assert.*;
 
@@ -35,6 +37,9 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class InstrumentedTests {
+    @Rule
+    public ActivityScenarioRule<LoginActivity> activityRule =
+            new ActivityScenarioRule<>(LoginActivity.class);
 
     @Test
     public void useAppContext() {
@@ -42,10 +47,6 @@ public class InstrumentedTests {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("ie.ul.ihearthealth", appContext.getPackageName());
     }
-
-    @Rule
-    public ActivityScenarioRule<LoginActivity> activityRule =
-            new ActivityScenarioRule<>(LoginActivity.class);
 
     @Test
     public void testConnectUsingText() {
@@ -56,7 +57,7 @@ public class InstrumentedTests {
     public void testRegister() {
         onView(withId(R.id.register)).perform(click());
         onView(withId(R.id.newUserEmail))
-                .perform(replaceText("nicole.berty@gmail.com"), closeSoftKeyboard());
+                .perform(replaceText("nicole.berty@test.com"), closeSoftKeyboard());
         onView(withId(R.id.newUserPassword))
                 .perform(replaceText("12345678"), closeSoftKeyboard());
         onView(withId(R.id.newUserRegisterBtn)).perform(click());
@@ -65,11 +66,11 @@ public class InstrumentedTests {
     @Test
     public void testLogin() {
         onView(withId(R.id.username))
-                .perform(replaceText("nicole.berty@gmail.com"), closeSoftKeyboard());
+                .perform(replaceText("nicole.berty@test.com"), closeSoftKeyboard());
         onView(withId(R.id.password))
                 .perform(replaceText("12345678"), closeSoftKeyboard());
         // Check that the text was changed.
-        onView(withId(R.id.username)).check(matches(withText("nicole.berty@gmail.com")));
+        onView(withId(R.id.username)).check(matches(withText("nicole.berty@test.com")));
         onView(withId(R.id.password)).check(matches(withText("12345678")));
 
         onView(withId(R.id.login)).check(matches(isEnabled()));
@@ -100,10 +101,10 @@ public class InstrumentedTests {
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_settings));
         onView(withId(R.id.email_address))
-                .perform(replaceText("nicole.berty2@gmail.com"), closeSoftKeyboard());
+                .perform(replaceText("nicole.berty2@test.com"), closeSoftKeyboard());
         onView(withId(R.id.btn_change_email)).perform(scrollTo(), click());
 
-        confirmCredentials("nicole.berty@gmail.com", "12345678");
+        confirmCredentials("nicole.berty@test.com", "12345678");
     }
 
     @Test
@@ -116,10 +117,11 @@ public class InstrumentedTests {
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_settings));
         onView(withId(R.id.email_address))
-                .perform(replaceText(""), replaceText("nicole.berty@gmail.com"), closeSoftKeyboard());
+                .perform(replaceText(""),
+                        replaceText("nicole.berty@test.com"), closeSoftKeyboard());
         onView(withId(R.id.btn_change_email)).perform(scrollTo(), click());
 
-        confirmCredentials("nicole.berty2@gmail.com", "12345678");
+        confirmCredentials("nicole.berty2@test.com", "12345678");
     }
 
     @Test
@@ -153,10 +155,10 @@ public class InstrumentedTests {
                 .perform(NavigationViewActions.navigateTo(R.id.nav_settings));
         fillPasswordFields("123456", "123456");
 
-        confirmCredentials("nicole.berty@gmail.com", "12345678");
+        confirmCredentials("nicole.berty@test.com", "12345678");
 
         fillPasswordFields("12345678", "12345678");
-        confirmCredentials("nicole.berty@gmail.com", "123456");
+        confirmCredentials("nicole.berty@test.com", "123456");
         onView(withId(R.id.change_pass_text)).check(matches(withText("Change your password:")));
     }
 
@@ -165,7 +167,7 @@ public class InstrumentedTests {
                 .perform(scrollTo(), replaceText(pass), closeSoftKeyboard());
         onView(withId(R.id.password)).check(matches(withText(pass)));
         onView(withId(R.id.password2))
-                .perform(scrollTo(), replaceText(pass), closeSoftKeyboard());
+                .perform(scrollTo(), replaceText(repeatPass), closeSoftKeyboard());
         onView(withId(R.id.btn_change_pass)).perform(scrollTo(), click());
     }
 
