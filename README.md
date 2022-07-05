@@ -1,6 +1,6 @@
 # iHeartHealth
 
-**Nicole Berty - 18246702**
+**Final Year Project - Nicole Berty**
 
 *The signed release apk is located in \<projectLocation>\iHeartHealth\app\release - you will need download this apk on the device and enable installing apps from external sources / installing unknown apps (depending on the model) in your phone or emulator's settings to be able to install the app this way.*
 
